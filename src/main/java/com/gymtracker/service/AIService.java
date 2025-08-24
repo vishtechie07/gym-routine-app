@@ -21,7 +21,6 @@ public class AIService {
     private final WorkoutLogRepository workoutLogRepository;
     private final MealLogRepository mealLogRepository;
     private OpenAiService openAiService;
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Autowired
     public AIService(WorkoutLogRepository workoutLogRepository, MealLogRepository mealLogRepository) {
