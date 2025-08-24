@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym & Meal Tracker with AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-dumbbell text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-xl font-bold text-gray-900">Gym & Meal Tracker with AI</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showTab('exercise')" id="exercise-tab" class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
+                        Exercise Log
+                    </button>
+                    <button onclick="showTab('diet')" id="diet-tab" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
+                        Diet Log
+                    </button>
+                    <button onclick="showTab('ai')" id="ai-tab" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
+                        AI Insights
+                    </button>
+                    <button onclick="showTab('settings')" id="settings-tab" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Exercise Log Form -->
+        <div id="exercise-form" class="tab-content">
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Log Your Workout</h2>
+                <form id="workout-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                        <label for="workout-userId" class="block text-sm font-medium text-gray-700 mb-2">User ID</label>
+                        <input type="number" id="workout-userId" name="userId" required min="1" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="1">
+                    </div>
+                    <div>
+                        <label for="workout-date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                        <input type="date" id="workout-date" name="date" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="exercise-name" class="block text-sm font-medium text-gray-700 mb-2">Exercise Name</label>
+                        <input type="text" id="exercise-name" name="exerciseName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="e.g., Bench Press">
+                    </div>
+                    <div>
+                        <label for="workout-sets" class="block text-sm font-medium text-gray-700 mb-2">Sets</label>
+                        <input type="number" id="workout-sets" name="sets" required min="1" max="100"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="3">
+                    </div>
+                    <div>
+                        <label for="workout-reps" class="block text-sm font-medium text-gray-700 mb-2">Reps</label>
+                        <input type="number" id="workout-reps" name="reps" required min="1" max="1000"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="10">
+                    </div>
+                    <div>
+                        <label for="workout-weight" class="block text-sm font-medium text-gray-700 mb-2">Weight (lbs)</label>
+                        <input type="number" id="workout-weight" name="weight" required min="0" step="0.5"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="135.0">
+                    </div>
+                </form>
+                <div class="mt-6">
+                    <button onclick="submitWorkout()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Log Workout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diet Log Form -->
+        <div id="diet-form" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Log Your Meal</h2>
+                <form id="meal-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                        <label for="meal-userId" class="block text-sm font-medium text-gray-700 mb-2">User ID</label>
+                        <input type="number" id="meal-userId" name="userId" required min="1"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="1">
+                    </div>
+                    <div>
+                        <label for="meal-date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                        <input type="date" id="meal-date" name="date" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="meal-name" class="block text-sm font-medium text-gray-700 mb-2">Meal Name</label>
+                        <input type="text" id="meal-name" name="mealName" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="e.g., Breakfast">
+                    </div>
+                    <div>
+                        <label for="meal-calories" class="block text-sm font-medium text-gray-700 mb-2">Calories</label>
+                        <input type="number" id="meal-calories" name="calories" required min="0" max="10000"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="500">
+                    </div>
+                    <div>
+                        <label for="meal-protein" class="block text-sm font-medium text-gray-700 mb-2">Protein (g)</label>
+                        <input type="number" id="meal-protein" name="protein" required min="0" step="0.1"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="25.0">
+                    </div>
+                    <div>
+                        <label for="meal-carbs" class="block text-sm font-medium text-gray-700 mb-2">Carbs (g)</label>
+                        <input type="number" id="meal-carbs" name="carbs" required min="0" step="0.1"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="50.0">
+                    </div>
+                    <div>
+                        <label for="meal-fats" class="block text-sm font-medium text-gray-700 mb-2">Fats (g)</label>
+                        <input type="number" id="meal-fats" name="fats" required min="0" step="0.1"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="15.0">
+                    </div>
+                </form>
+                <div class="mt-6">
+                    <button onclick="submitMeal()" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Log Meal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Insights Tab -->
+        <div id="ai-form" class="tab-content hidden">
+            <div class="space-y-6">
+                <!-- AI Status -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-900">AI Status</h2>
+                        <div id="ai-status" class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                            Checking...
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Get personalized AI-powered insights for your fitness journey.</p>
+                </div>
+
+                <!-- AI Features -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Workout Recommendations -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-dumbbell text-blue-600 text-xl mr-3"></i>
+                            <h3 class="text-lg font-semibold text-gray-900">Workout Recommendations</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Get AI-powered workout suggestions based on your history.</p>
+                        <div class="mb-4">
+                            <input type="number" id="ai-workout-userId" placeholder="User ID" min="1"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button onclick="getWorkoutRecommendations()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                            Get Recommendations
+                        </button>
+                        <div id="workout-recommendations-output" class="mt-4 p-3 bg-gray-50 rounded-md hidden">
+                            <div class="text-sm text-gray-700"></div>
+                        </div>
+                    </div>
+
+                    <!-- Nutrition Advice -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-apple-alt text-green-600 text-xl mr-3"></i>
+                            <h3 class="text-lg font-semibold text-gray-900">Nutrition Coach</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Get personalized nutrition advice and meal suggestions.</p>
+                        <div class="mb-4">
+                            <input type="number" id="ai-nutrition-userId" placeholder="User ID" min="1"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button onclick="getNutritionAdvice()" class="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
+                            Get Advice
+                        </button>
+                        <div id="nutrition-advice-output" class="mt-4 p-3 bg-gray-50 rounded-md hidden">
+                            <div class="text-sm text-gray-700"></div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Analysis -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-chart-line text-purple-600 text-xl mr-3"></i>
+                            <h3 class="text-lg font-semibold text-gray-900">Progress Analysis</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Get AI insights into your fitness progress and predictions.</p>
+                        <div class="mb-4">
+                            <input type="number" id="ai-progress-userId" placeholder="User ID" min="1"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button onclick="getProgressAnalysis()" class="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors">
+                            Analyze Progress
+                        </button>
+                        <div id="progress-analysis-output" class="mt-4 p-3 bg-gray-50 rounded-md hidden">
+                            <div class="text-sm text-gray-700"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings-form" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">AI Settings</h2>
+                
+                <!-- OpenAI API Key Configuration -->
+                <div class="mb-6">
+                    <label for="openai-api-key" class="block text-sm font-medium text-gray-700 mb-2">
+                        OpenAI API Key
+                    </label>
+                    <div class="flex space-x-3">
+                        <input type="password" id="openai-api-key" 
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="sk-...">
+                        <button onclick="configureAI()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                            Configure AI
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">
+                        Enter your OpenAI API key to enable AI-powered fitness insights. 
+                        <a href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-600 hover:underline">Get your API key here</a>
+                    </p>
+                </div>
+
+                <!-- Current Status -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="text-sm font-medium text-gray-900 mb-2">Current Status</h3>
+                    <div id="settings-ai-status" class="text-sm text-gray-600">
+                        Checking AI configuration...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities Section -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Recent Activities</h3>
+            </div>
+            <div id="activities-list" class="p-6">
+                <p class="text-gray-500 text-center">No activities logged yet. Start by logging a workout or meal above!</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Set today's date as default for both forms
+        document.getElementById('workout-date').valueAsDate = new Date();
+        document.getElementById('meal-date').valueAsDate = new Date();
+
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Remove active state from all tabs
+            document.querySelectorAll('#exercise-tab, #diet-tab, #ai-tab, #settings-tab').forEach(tab => {
+                tab.classList.remove('text-blue-600', 'border-blue-600');
+                tab.classList.add('text-gray-500', 'border-transparent');
+            });
+
+            // Show selected tab content
+            if (tabName === 'exercise') {
+                document.getElementById('exercise-form').classList.remove('hidden');
+                document.getElementById('exercise-tab').classList.add('text-blue-600', 'border-blue-600');
+                document.getElementById('exercise-tab').classList.remove('text-gray-500', 'border-transparent');
+            } else if (tabName === 'diet') {
+                document.getElementById('diet-form').classList.remove('hidden');
+                document.getElementById('diet-tab').classList.add('text-blue-600', 'border-blue-600');
+                document.getElementById('diet-tab').classList.remove('text-gray-500', 'border-transparent');
+            } else if (tabName === 'ai') {
+                document.getElementById('ai-form').classList.remove('hidden');
+                document.getElementById('ai-tab').classList.add('text-blue-600', 'border-blue-600');
+                document.getElementById('ai-tab').classList.remove('text-gray-500', 'border-transparent');
+                checkAIStatus();
+            } else if (tabName === 'settings') {
+                document.getElementById('settings-form').classList.remove('hidden');
+                document.getElementById('settings-tab').classList.add('text-blue-600', 'border-blue-600');
+                document.getElementById('settings-tab').classList.remove('text-gray-500', 'border-transparent');
+                checkAIStatus();
+            }
+        }
+
+        // AI Configuration
+        async function configureAI() {
+            const apiKey = document.getElementById('openai-api-key').value.trim();
+            if (!apiKey) {
+                showErrorMessage('Please enter your OpenAI API key');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/ai/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ apiKey: apiKey })
+                });
+
+                if (response.ok) {
+                    showSuccessMessage('AI configured successfully!');
+                    checkAIStatus();
+                    // Clear the API key field for security
+                    document.getElementById('openai-api-key').value = '';
+                } else {
+                    const errorData = await response.json();
+                    showErrorMessage('Failed to configure AI: ' + errorData.error);
+                }
+            } catch (error) {
+                showErrorMessage('Connection error. Please try again.');
+            }
+        }
+
+        // Check AI Status
+        async function checkAIStatus() {
+            try {
+                const response = await fetch('/api/ai/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    updateAIStatus(data.configured);
+                }
+            } catch (error) {
+                updateAIStatus(false);
+            }
+        }
+
+        function updateAIStatus(configured) {
+            const statusElements = document.querySelectorAll('#ai-status, #settings-ai-status');
+            statusElements.forEach(element => {
+                if (element.id === 'ai-status') {
+                    element.textContent = configured ? 'Configured' : 'Not Configured';
+                    element.className = configured ? 
+                        'px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800' :
+                        'px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
+                } else {
+                    element.textContent = configured ? 
+                        '✅ AI is configured and ready to use' : 
+                        '❌ AI is not configured. Please add your OpenAI API key above.';
+                }
+            });
+        }
+
+        // Get workout recommendations from AI
+        async function getWorkoutRecommendations() {
+            const userId = document.getElementById('ai-workout-userId').value;
+            if (!userId) {
+                showErrorMessage('Please enter a User ID');
+                return;
+            }
+
+            const button = document.querySelector('button[onclick="getWorkoutRecommendations()"]');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Getting Recommendations...';
+            button.disabled = true;
+
+            try {
+                const response = await fetch(`/api/ai/workout-recommendations/${userId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    showAIOutput('workout-recommendations-output', data.recommendations);
+                } else {
+                    const errorData = await response.json();
+                    showErrorMessage('Failed to get recommendations: ' + errorData.error);
+                }
+            } catch (error) {
+                showErrorMessage('Connection error. Please try again.');
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // Get nutrition advice from AI
+        async function getNutritionAdvice() {
+            const userId = document.getElementById('ai-nutrition-userId').value;
+            if (!userId) {
+                showErrorMessage('Please enter a User ID');
+                return;
+            }
+
+            const button = document.querySelector('button[onclick="getNutritionAdvice()"]');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Getting Advice...';
+            button.disabled = true;
+
+            try {
+                const response = await fetch(`/api/ai/nutrition-advice/${userId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    showAIOutput('nutrition-advice-output', data.advice);
+                } else {
+                    const errorData = await response.json();
+                    showErrorMessage('Failed to get nutrition advice: ' + errorData.error);
+                }
+            } catch (error) {
+                showErrorMessage('Connection error. Please try again.');
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // Get progress analysis from AI
+        async function getProgressAnalysis() {
+            const userId = document.getElementById('ai-progress-userId').value;
+            if (!userId) {
+                showErrorMessage('Please enter a User ID');
+                return;
+            }
+
+            const button = document.querySelector('button[onclick="getProgressAnalysis()"]');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing Progress...';
+            button.disabled = true;
+
+            try {
+                const response = await fetch(`/api/ai/progress-analysis/${userId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    showAIOutput('progress-analysis-output', data.analysis);
+                } else {
+                    const errorData = await response.json();
+                    showErrorMessage('Failed to get progress analysis: ' + errorData.error);
+                }
+            } catch (error) {
+                showErrorMessage('Connection error. Please try again.');
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // Format and display AI output with proper styling
+        function showAIOutput(outputId, content) {
+            const outputElement = document.getElementById(outputId);
+            const contentElement = outputElement.querySelector('div');
+            
+            // Parse the AI response and format it nicely
+            let formattedContent = content;
+            
+            // Check if the content contains numbered lists (like "1.", "2.", etc.)
+            if (content.match(/\d+\./)) {
+                // Split by numbered items and format as HTML
+                formattedContent = content
+                    .split(/(?=\d+\.)/) // Split at numbered items
+                    .filter(item => item.trim()) // Remove empty items
+                    .map(item => {
+                        const trimmed = item.trim();
+                        if (trimmed.match(/^\d+\./)) {
+                            // Convert numbered items to bullet points with better formatting
+                            const text = trimmed.replace(/^\d+\.\s*/, '');
+                            // Split on colon if present to separate title from content
+                            const parts = text.split(':');
+                            if (parts.length > 1) {
+                                const title = parts[0].trim();
+                                const content = parts.slice(1).join(':').trim();
+                                return `<li class="mb-3">
+                                    <span class="font-semibold text-blue-600">${title}:</span>
+                                    <span class="text-gray-700">${content}</span>
+                                </li>`;
+                            } else {
+                                return `<li class="mb-3 text-gray-700">${text}</li>`;
+                            }
+                        }
+                        return trimmed;
+                    })
+                    .join('');
+                
+                // Wrap in ul tags for proper bullet formatting with enhanced styling
+                formattedContent = `<ul class="list-none space-y-1 text-sm">
+                    ${formattedContent}
+                </ul>`;
+            } else {
+                // For non-numbered content, just format as paragraphs
+                formattedContent = content
+                    .split('\n')
+                    .filter(line => line.trim())
+                    .map(line => `<p class="mb-2 text-sm text-gray-700">${line.trim()}</p>`)
+                    .join('');
+            }
+            
+            contentElement.innerHTML = formattedContent;
+            outputElement.classList.remove('hidden');
+        }
+
+        // Submit workout form
+        async function submitWorkout() {
+            const form = document.getElementById('workout-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = new FormData(form);
+            const workoutData = {
+                userId: parseInt(formData.get('userId')),
+                date: formData.get('date'),
+                exerciseName: formData.get('exerciseName'),
+                sets: parseInt(formData.get('sets')),
+                reps: parseInt(formData.get('reps')),
+                weight: parseFloat(formData.get('weight'))
+            };
+
+            try {
+                const response = await fetch('/api/workouts/log', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(workoutData)
+                });
+
+                if (response.ok) {
+                    const workout = await response.json();
+                    addActivityToList('workout', workout);
+                    form.reset();
+                    document.getElementById('workout-date').valueAsDate = new Date();
+                    showSuccessMessage('Workout logged successfully!');
+                } else {
+                    const errorData = await response.json();
+                    showErrorMessage('Error logging workout: ' + JSON.stringify(errorData));
+                }
+            } catch (error) {
+                showErrorMessage('Connection error. Please try again.');
+            }
+        }
+
+        // Submit meal form
+        async function submitMeal() {
+            const form = document.getElementById('meal-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = new FormData(form);
+            const mealData = {
+                userId: parseInt(formData.get('userId')),
+                date: formData.get('date'),
+                mealName: formData.get('mealName'),
+                calories: parseInt(formData.get('calories')),
+                protein: parseFloat(formData.get('protein')),
+                carbs: parseFloat(formData.get('carbs')),
+                fats: parseFloat(formData.get('fats'))
+            };
+
+            try {
+                const response = await fetch('/api/meals/log', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(mealData)
+                });
+
+                if (response.ok) {
+                    const meal = await response.json();
+                    addActivityToList('meal', meal);
+                    form.reset();
+                    document.getElementById('meal-date').valueAsDate = new Date();
+                    showSuccessMessage('Meal logged successfully!');
+                } else {
+                    const errorData = await response.json();
+                    showErrorMessage('Error logging meal: ' + JSON.stringify(errorData));
+                }
+            } catch (error) {
+                showErrorMessage('Connection error. Please try again.');
+            }
+        }
+
+        // Add activity to the list
+        function addActivityToList(type, data) {
+            const activitiesList = document.getElementById('activities-list');
+            
+            // Remove the "no activities" message if it exists
+            if (activitiesList.querySelector('p.text-gray-500')) {
+                activitiesList.innerHTML = '';
+            }
+
+            const activityElement = document.createElement('div');
+            activityElement.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-3';
+            
+            if (type === 'workout') {
+                activityElement.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-100 rounded-lg mr-3">
+                            <i class="fas fa-dumbbell text-blue-600"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900">${data.exerciseName}</div>
+                            <div class="text-sm text-gray-600">${data.date} • ${data.sets} sets × ${data.reps} reps</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-semibold text-blue-600">${data.weight} lbs</div>
+                        <div class="text-xs text-gray-500">Workout</div>
+                    </div>
+                `;
+            } else if (type === 'meal') {
+                activityElement.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-100 rounded-lg mr-3">
+                            <i class="fas fa-utensils text-green-600"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900">${data.mealName}</div>
+                            <div class="text-sm text-gray-600">${data.date} • ${data.calories} calories</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-gray-600">P: ${data.protein}g | C: ${data.carbs}g | F: ${data.fats}g</div>
+                        <div class="text-xs text-gray-500">Meal</div>
+                    </div>
+                `;
+            }
+
+            activitiesList.insertBefore(activityElement, activitiesList.firstChild);
+        }
+
+        // Show success message
+        function showSuccessMessage(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Show error message
+        function showErrorMessage(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('exercise');
+        });
+    </script>
+</body>
+</html>
