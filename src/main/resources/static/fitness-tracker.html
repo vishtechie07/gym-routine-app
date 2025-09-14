@@ -77,19 +77,21 @@
         }
         
         .pulse-ring {
-            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
         
         @keyframes pulse-ring {
             0% {
-                transform: scale(0.33);
-            }
-            40%, 50% {
+                transform: scale(0.8);
                 opacity: 1;
             }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
             100% {
+                transform: scale(1.3);
                 opacity: 0;
-                transform: scale(1.2);
             }
         }
         
@@ -133,11 +135,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex items-center">
-                    <div class="relative">
-                        <div class="p-3 bg-white rounded-full shadow-lg floating">
+                    <div class="relative w-16 h-16 flex items-center justify-center">
+                        <div class="p-3 bg-white rounded-full shadow-lg floating z-10">
                             <i class="fas fa-dumbbell text-2xl gradient-text"></i>
                         </div>
-                        <div class="absolute inset-0 rounded-full pulse-ring bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                        <div class="absolute inset-0 rounded-full pulse-ring bg-gradient-to-r from-blue-500 to-purple-600 opacity-60"></div>
                     </div>
                     <div class="ml-4">
                         <h1 class="text-2xl font-bold text-white">FitnessAI</h1>
@@ -163,10 +165,10 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
         <!-- Exercise Log Form -->
         <div id="exercise-form" class="tab-content fade-in">
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8 card-hover border border-white/20">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20">
                 <div class="flex items-center mb-8">
                     <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mr-4">
                         <i class="fas fa-dumbbell text-white text-2xl"></i>
@@ -223,7 +225,7 @@
 
         <!-- Diet Log Form -->
         <div id="diet-form" class="tab-content hidden fade-in">
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8 card-hover border border-white/20">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20">
                 <div class="flex items-center mb-8">
                     <div class="p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mr-4">
                         <i class="fas fa-utensils text-white text-2xl"></i>
@@ -307,7 +309,7 @@
                 </div>
 
                 <!-- AI Features -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
                     <!-- Workout Recommendations -->
                     <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20 slide-in">
                         <div class="flex items-center mb-6">
@@ -417,7 +419,7 @@
         </div>
 
         <!-- Recent Activities Section -->
-        <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl card-hover border border-white/20">
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl card-hover border border-white/20 mt-8">
             <div class="px-8 py-6 border-b border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl mr-4">
