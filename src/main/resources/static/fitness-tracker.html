@@ -6,28 +6,156 @@
     <title>Gym & Meal Tracker with AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .tab-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.33);
+            }
+            40%, 50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="min-h-screen" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
+    <header class="glass-effect sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <div class="flex justify-between items-center h-20">
                 <div class="flex items-center">
-                    <i class="fas fa-dumbbell text-blue-600 text-2xl mr-3"></i>
-                    <h1 class="text-xl font-bold text-gray-900">Gym & Meal Tracker with AI</h1>
+                    <div class="relative">
+                        <div class="p-3 bg-white rounded-full shadow-lg floating">
+                            <i class="fas fa-dumbbell text-2xl gradient-text"></i>
+                        </div>
+                        <div class="absolute inset-0 rounded-full pulse-ring bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                    </div>
+                    <div class="ml-4">
+                        <h1 class="text-2xl font-bold text-white">FitnessAI</h1>
+                        <p class="text-sm text-white/80">Your Personal Training Companion</p>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button onclick="showTab('exercise')" id="exercise-tab" class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600">
-                        Exercise Log
+                <div class="flex items-center space-x-2">
+                    <button onclick="showTab('exercise')" id="exercise-tab" class="px-6 py-3 text-sm font-medium text-white bg-white/20 rounded-full hover:bg-white/30 tab-transition backdrop-blur-sm border border-white/30">
+                        <i class="fas fa-dumbbell mr-2"></i>Exercise
                     </button>
-                    <button onclick="showTab('diet')" id="diet-tab" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
-                        Diet Log
+                    <button onclick="showTab('diet')" id="diet-tab" class="px-6 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/20 rounded-full tab-transition backdrop-blur-sm border border-white/20">
+                        <i class="fas fa-utensils mr-2"></i>Diet
                     </button>
-                    <button onclick="showTab('ai')" id="ai-tab" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
-                        AI Insights
+                    <button onclick="showTab('ai')" id="ai-tab" class="px-6 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/20 rounded-full tab-transition backdrop-blur-sm border border-white/20">
+                        <i class="fas fa-brain mr-2"></i>AI Insights
                     </button>
-                    <button onclick="showTab('settings')" id="settings-tab" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300">
-                        Settings
+                    <button onclick="showTab('settings')" id="settings-tab" class="px-6 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/20 rounded-full tab-transition backdrop-blur-sm border border-white/20">
+                        <i class="fas fa-cog mr-2"></i>Settings
                     </button>
                 </div>
             </div>
@@ -35,50 +163,58 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <!-- Exercise Log Form -->
-        <div id="exercise-form" class="tab-content">
-            <div class="bg-white rounded-lg shadow p-6 mb-8">
-                <h2 class="text-lg font-semibold text-gray-900 mb-6">Log Your Workout</h2>
-                <form id="workout-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="exercise-form" class="tab-content fade-in">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8 card-hover border border-white/20">
+                <div class="flex items-center mb-8">
+                    <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mr-4">
+                        <i class="fas fa-dumbbell text-white text-2xl"></i>
+                    </div>
                     <div>
-                        <label for="workout-userId" class="block text-sm font-medium text-gray-700 mb-2">User ID</label>
+                        <h2 class="text-2xl font-bold text-gray-900">Log Your Workout</h2>
+                        <p class="text-gray-600">Track your exercises and build strength</p>
+                    </div>
+                </div>
+                <form id="workout-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="space-y-2">
+                        <label for="workout-userId" class="block text-sm font-semibold text-gray-700">User ID</label>
                         <input type="number" id="workout-userId" name="userId" required min="1" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
                                placeholder="1">
                     </div>
-                    <div>
-                        <label for="workout-date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                    <div class="space-y-2">
+                        <label for="workout-date" class="block text-sm font-semibold text-gray-700">Date</label>
                         <input type="date" id="workout-date" name="date" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80">
                     </div>
-                    <div>
-                        <label for="exercise-name" class="block text-sm font-medium text-gray-700 mb-2">Exercise Name</label>
+                    <div class="space-y-2">
+                        <label for="exercise-name" class="block text-sm font-semibold text-gray-700">Exercise Name</label>
                         <input type="text" id="exercise-name" name="exerciseName" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
                                placeholder="e.g., Bench Press">
                     </div>
-                    <div>
-                        <label for="workout-sets" class="block text-sm font-medium text-gray-700 mb-2">Sets</label>
+                    <div class="space-y-2">
+                        <label for="workout-sets" class="block text-sm font-semibold text-gray-700">Sets</label>
                         <input type="number" id="workout-sets" name="sets" required min="1" max="100"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
                                placeholder="3">
                     </div>
-                    <div>
-                        <label for="workout-reps" class="block text-sm font-medium text-gray-700 mb-2">Reps</label>
+                    <div class="space-y-2">
+                        <label for="workout-reps" class="block text-sm font-semibold text-gray-700">Reps</label>
                         <input type="number" id="workout-reps" name="reps" required min="1" max="1000"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
                                placeholder="10">
                     </div>
-                    <div>
-                        <label for="workout-weight" class="block text-sm font-medium text-gray-700 mb-2">Weight (lbs)</label>
+                    <div class="space-y-2">
+                        <label for="workout-weight" class="block text-sm font-semibold text-gray-700">Weight (lbs)</label>
                         <input type="number" id="workout-weight" name="weight" required min="0" step="0.5"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
                                placeholder="135.0">
                     </div>
                 </form>
-                <div class="mt-6">
-                    <button onclick="submitWorkout()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                <div class="mt-8 flex justify-center">
+                    <button onclick="submitWorkout()" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
                         <i class="fas fa-plus mr-2"></i>Log Workout
                     </button>
                 </div>
@@ -86,54 +222,62 @@
         </div>
 
         <!-- Diet Log Form -->
-        <div id="diet-form" class="tab-content hidden">
-            <div class="bg-white rounded-lg shadow p-6 mb-8">
-                <h2 class="text-lg font-semibold text-gray-900 mb-6">Log Your Meal</h2>
-                <form id="meal-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="diet-form" class="tab-content hidden fade-in">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8 card-hover border border-white/20">
+                <div class="flex items-center mb-8">
+                    <div class="p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mr-4">
+                        <i class="fas fa-utensils text-white text-2xl"></i>
+                    </div>
                     <div>
-                        <label for="meal-userId" class="block text-sm font-medium text-gray-700 mb-2">User ID</label>
+                        <h2 class="text-2xl font-bold text-gray-900">Log Your Meal</h2>
+                        <p class="text-gray-600">Track your nutrition and fuel your body</p>
+                    </div>
+                </div>
+                <form id="meal-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="space-y-2">
+                        <label for="meal-userId" class="block text-sm font-semibold text-gray-700">User ID</label>
                         <input type="number" id="meal-userId" name="userId" required min="1"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
                                placeholder="1">
                     </div>
-                    <div>
-                        <label for="meal-date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                    <div class="space-y-2">
+                        <label for="meal-date" class="block text-sm font-semibold text-gray-700">Date</label>
                         <input type="date" id="meal-date" name="date" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80">
                     </div>
-                    <div>
-                        <label for="meal-name" class="block text-sm font-medium text-gray-700 mb-2">Meal Name</label>
+                    <div class="space-y-2">
+                        <label for="meal-name" class="block text-sm font-semibold text-gray-700">Meal Name</label>
                         <input type="text" id="meal-name" name="mealName" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
                                placeholder="e.g., Breakfast">
                     </div>
-                    <div>
-                        <label for="meal-calories" class="block text-sm font-medium text-gray-700 mb-2">Calories</label>
+                    <div class="space-y-2">
+                        <label for="meal-calories" class="block text-sm font-semibold text-gray-700">Calories</label>
                         <input type="number" id="meal-calories" name="calories" required min="0" max="10000"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
                                placeholder="500">
                     </div>
-                    <div>
-                        <label for="meal-protein" class="block text-sm font-medium text-gray-700 mb-2">Protein (g)</label>
+                    <div class="space-y-2">
+                        <label for="meal-protein" class="block text-sm font-semibold text-gray-700">Protein (g)</label>
                         <input type="number" id="meal-protein" name="protein" required min="0" step="0.1"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
                                placeholder="25.0">
                     </div>
-                    <div>
-                        <label for="meal-carbs" class="block text-sm font-medium text-gray-700 mb-2">Carbs (g)</label>
+                    <div class="space-y-2">
+                        <label for="meal-carbs" class="block text-sm font-semibold text-gray-700">Carbs (g)</label>
                         <input type="number" id="meal-carbs" name="carbs" required min="0" step="0.1"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
                                placeholder="50.0">
                     </div>
-                    <div>
-                        <label for="meal-fats" class="block text-sm font-medium text-gray-700 mb-2">Fats (g)</label>
+                    <div class="space-y-2">
+                        <label for="meal-fats" class="block text-sm font-semibold text-gray-700">Fats (g)</label>
                         <input type="number" id="meal-fats" name="fats" required min="0" step="0.1"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
                                placeholder="15.0">
                     </div>
                 </form>
-                <div class="mt-6">
-                    <button onclick="submitMeal()" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors">
+                <div class="mt-8 flex justify-center">
+                    <button onclick="submitMeal()" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
                         <i class="fas fa-plus mr-2"></i>Log Meal
                     </button>
                 </div>
@@ -141,74 +285,88 @@
         </div>
 
         <!-- AI Insights Tab -->
-        <div id="ai-form" class="tab-content hidden">
-            <div class="space-y-6">
+        <div id="ai-form" class="tab-content hidden fade-in">
+            <div class="space-y-8">
                 <!-- AI Status -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-gray-900">AI Status</h2>
-                        <div id="ai-status" class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <div class="p-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl mr-4">
+                                <i class="fas fa-brain text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900">AI Status</h2>
+                                <p class="text-gray-600">Your intelligent fitness companion</p>
+                            </div>
+                        </div>
+                        <div id="ai-status" class="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-800 shimmer">
                             Checking...
                         </div>
                     </div>
-                    <p class="text-gray-600">Get personalized AI-powered insights for your fitness journey.</p>
+                    <p class="text-gray-600 text-lg">Get personalized AI-powered insights for your fitness journey.</p>
                 </div>
 
                 <!-- AI Features -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Workout Recommendations -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-dumbbell text-blue-600 text-xl mr-3"></i>
-                            <h3 class="text-lg font-semibold text-gray-900">Workout Recommendations</h3>
+                    <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20 slide-in">
+                        <div class="flex items-center mb-6">
+                            <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mr-4">
+                                <i class="fas fa-dumbbell text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900">Workout Recommendations</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Get AI-powered workout suggestions based on your history.</p>
-                        <div class="mb-4">
+                        <p class="text-gray-600 mb-6">Get AI-powered workout suggestions based on your history.</p>
+                        <div class="mb-6">
                             <input type="number" id="ai-workout-userId" placeholder="User ID" min="1"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80">
                         </div>
-                        <button onclick="getWorkoutRecommendations()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
-                            Get Recommendations
+                        <button onclick="getWorkoutRecommendations()" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                            <i class="fas fa-magic mr-2"></i>Get Recommendations
                         </button>
-                        <div id="workout-recommendations-output" class="mt-4 p-3 bg-gray-50 rounded-md hidden">
+                        <div id="workout-recommendations-output" class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl hidden border border-blue-200">
                             <div class="text-sm text-gray-700"></div>
                         </div>
                     </div>
 
                     <!-- Nutrition Advice -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-apple-alt text-green-600 text-xl mr-3"></i>
-                            <h3 class="text-lg font-semibold text-gray-900">Nutrition Coach</h3>
+                    <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20 slide-in" style="animation-delay: 0.1s">
+                        <div class="flex items-center mb-6">
+                            <div class="p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mr-4">
+                                <i class="fas fa-apple-alt text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900">Nutrition Coach</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Get personalized nutrition advice and meal suggestions.</p>
-                        <div class="mb-4">
+                        <p class="text-gray-600 mb-6">Get personalized nutrition advice and meal suggestions.</p>
+                        <div class="mb-6">
                             <input type="number" id="ai-nutrition-userId" placeholder="User ID" min="1"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80">
                         </div>
-                        <button onclick="getNutritionAdvice()" class="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
-                            Get Advice
+                        <button onclick="getNutritionAdvice()" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                            <i class="fas fa-seedling mr-2"></i>Get Advice
                         </button>
-                        <div id="nutrition-advice-output" class="mt-4 p-3 bg-gray-50 rounded-md hidden">
+                        <div id="nutrition-advice-output" class="mt-6 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl hidden border border-green-200">
                             <div class="text-sm text-gray-700"></div>
                         </div>
                     </div>
 
                     <!-- Progress Analysis -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-chart-line text-purple-600 text-xl mr-3"></i>
-                            <h3 class="text-lg font-semibold text-gray-900">Progress Analysis</h3>
+                    <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20 slide-in" style="animation-delay: 0.2s">
+                        <div class="flex items-center mb-6">
+                            <div class="p-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl mr-4">
+                                <i class="fas fa-chart-line text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900">Progress Analysis</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Get AI insights into your fitness progress and predictions.</p>
-                        <div class="mb-4">
+                        <p class="text-gray-600 mb-6">Get AI insights into your fitness progress and predictions.</p>
+                        <div class="mb-6">
                             <input type="number" id="ai-progress-userId" placeholder="User ID" min="1"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 bg-white/80">
                         </div>
-                        <button onclick="getProgressAnalysis()" class="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors">
-                            Analyze Progress
+                        <button onclick="getProgressAnalysis()" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                            <i class="fas fa-chart-bar mr-2"></i>Analyze Progress
                         </button>
-                        <div id="progress-analysis-output" class="mt-4 p-3 bg-gray-50 rounded-md hidden">
+                        <div id="progress-analysis-output" class="mt-6 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl hidden border border-purple-200">
                             <div class="text-sm text-gray-700"></div>
                         </div>
                     </div>
@@ -217,33 +375,41 @@
         </div>
 
         <!-- Settings Tab -->
-        <div id="settings-form" class="tab-content hidden">
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-6">AI Settings</h2>
+        <div id="settings-form" class="tab-content hidden fade-in">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20">
+                <div class="flex items-center mb-8">
+                    <div class="p-4 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl mr-4">
+                        <i class="fas fa-cog text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">AI Settings</h2>
+                        <p class="text-gray-600">Configure your AI assistant</p>
+                    </div>
+                </div>
                 
                 <!-- OpenAI API Key Configuration -->
-                <div class="mb-6">
-                    <label for="openai-api-key" class="block text-sm font-medium text-gray-700 mb-2">
+                <div class="mb-8">
+                    <label for="openai-api-key" class="block text-sm font-semibold text-gray-700 mb-3">
                         OpenAI API Key
                     </label>
-                    <div class="flex space-x-3">
+                    <div class="flex space-x-4">
                         <input type="password" id="openai-api-key" 
-                               class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
                                placeholder="sk-...">
-                        <button onclick="configureAI()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
-                            Configure AI
+                        <button onclick="configureAI()" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                            <i class="fas fa-key mr-2"></i>Configure AI
                         </button>
                     </div>
-                    <p class="text-sm text-gray-500 mt-2">
+                    <p class="text-sm text-gray-500 mt-3">
                         Enter your OpenAI API key to enable AI-powered fitness insights. 
-                        <a href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-600 hover:underline">Get your API key here</a>
+                        <a href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-600 hover:underline font-semibold">Get your API key here</a>
                     </p>
                 </div>
 
                 <!-- Current Status -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <h3 class="text-sm font-medium text-gray-900 mb-2">Current Status</h3>
-                    <div id="settings-ai-status" class="text-sm text-gray-600">
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Current Status</h3>
+                    <div id="settings-ai-status" class="text-sm text-gray-600 shimmer">
                         Checking AI configuration...
                     </div>
                 </div>
@@ -251,12 +417,22 @@
         </div>
 
         <!-- Recent Activities Section -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Recent Activities</h3>
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl card-hover border border-white/20">
+            <div class="px-8 py-6 border-b border-gray-200">
+                <div class="flex items-center">
+                    <div class="p-3 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl mr-4">
+                        <i class="fas fa-history text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">Recent Activities</h3>
+                </div>
             </div>
-            <div id="activities-list" class="p-6">
-                <p class="text-gray-500 text-center">No activities logged yet. Start by logging a workout or meal above!</p>
+            <div id="activities-list" class="p-8">
+                <div class="text-center py-12">
+                    <div class="p-6 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl inline-block mb-4">
+                        <i class="fas fa-clipboard-list text-4xl text-gray-400"></i>
+                    </div>
+                    <p class="text-gray-500 text-lg">No activities logged yet. Start by logging a workout or meal above!</p>
+                </div>
             </div>
         </div>
     </main>
@@ -266,39 +442,46 @@
         document.getElementById('workout-date').valueAsDate = new Date();
         document.getElementById('meal-date').valueAsDate = new Date();
 
-        // Tab switching functionality
+        // Tab switching functionality with animations
         function showTab(tabName) {
-            // Hide all tab contents
+            // Hide all tab contents with fade out
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
+                content.classList.remove('fade-in');
             });
 
             // Remove active state from all tabs
             document.querySelectorAll('#exercise-tab, #diet-tab, #ai-tab, #settings-tab').forEach(tab => {
-                tab.classList.remove('text-blue-600', 'border-blue-600');
-                tab.classList.add('text-gray-500', 'border-transparent');
+                tab.classList.remove('text-white', 'bg-white/30', 'border-white/30');
+                tab.classList.add('text-white/80', 'hover:bg-white/20', 'border-white/20');
             });
 
-            // Show selected tab content
-            if (tabName === 'exercise') {
-                document.getElementById('exercise-form').classList.remove('hidden');
-                document.getElementById('exercise-tab').classList.add('text-blue-600', 'border-blue-600');
-                document.getElementById('exercise-tab').classList.remove('text-gray-500', 'border-transparent');
-            } else if (tabName === 'diet') {
-                document.getElementById('diet-form').classList.remove('hidden');
-                document.getElementById('diet-tab').classList.add('text-blue-600', 'border-blue-600');
-                document.getElementById('diet-tab').classList.remove('text-gray-500', 'border-transparent');
-            } else if (tabName === 'ai') {
-                document.getElementById('ai-form').classList.remove('hidden');
-                document.getElementById('ai-tab').classList.add('text-blue-600', 'border-blue-600');
-                document.getElementById('ai-tab').classList.remove('text-gray-500', 'border-transparent');
-                checkAIStatus();
-            } else if (tabName === 'settings') {
-                document.getElementById('settings-form').classList.remove('hidden');
-                document.getElementById('settings-tab').classList.add('text-blue-600', 'border-blue-600');
-                document.getElementById('settings-tab').classList.remove('text-gray-500', 'border-transparent');
-                checkAIStatus();
-            }
+            // Show selected tab content with animation
+            setTimeout(() => {
+                if (tabName === 'exercise') {
+                    document.getElementById('exercise-form').classList.remove('hidden');
+                    document.getElementById('exercise-form').classList.add('fade-in');
+                    document.getElementById('exercise-tab').classList.add('text-white', 'bg-white/30', 'border-white/30');
+                    document.getElementById('exercise-tab').classList.remove('text-white/80', 'hover:bg-white/20', 'border-white/20');
+                } else if (tabName === 'diet') {
+                    document.getElementById('diet-form').classList.remove('hidden');
+                    document.getElementById('diet-form').classList.add('fade-in');
+                    document.getElementById('diet-tab').classList.add('text-white', 'bg-white/30', 'border-white/30');
+                    document.getElementById('diet-tab').classList.remove('text-white/80', 'hover:bg-white/20', 'border-white/20');
+                } else if (tabName === 'ai') {
+                    document.getElementById('ai-form').classList.remove('hidden');
+                    document.getElementById('ai-form').classList.add('fade-in');
+                    document.getElementById('ai-tab').classList.add('text-white', 'bg-white/30', 'border-white/30');
+                    document.getElementById('ai-tab').classList.remove('text-white/80', 'hover:bg-white/20', 'border-white/20');
+                    checkAIStatus();
+                } else if (tabName === 'settings') {
+                    document.getElementById('settings-form').classList.remove('hidden');
+                    document.getElementById('settings-form').classList.add('fade-in');
+                    document.getElementById('settings-tab').classList.add('text-white', 'bg-white/30', 'border-white/30');
+                    document.getElementById('settings-tab').classList.remove('text-white/80', 'hover:bg-white/20', 'border-white/20');
+                    checkAIStatus();
+                }
+            }, 100);
         }
 
         // AI Configuration
@@ -589,48 +772,48 @@
             }
         }
 
-        // Add activity to the list
+        // Add activity to the list with animations
         function addActivityToList(type, data) {
             const activitiesList = document.getElementById('activities-list');
             
             // Remove the "no activities" message if it exists
-            if (activitiesList.querySelector('p.text-gray-500')) {
+            if (activitiesList.querySelector('.text-center')) {
                 activitiesList.innerHTML = '';
             }
 
             const activityElement = document.createElement('div');
-            activityElement.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-3';
+            activityElement.className = 'flex items-center justify-between p-6 bg-gradient-to-r from-white to-gray-50 rounded-2xl mb-4 shadow-lg border border-gray-200 bounce-in card-hover';
             
             if (type === 'workout') {
                 activityElement.innerHTML = `
                     <div class="flex items-center">
-                        <div class="p-2 bg-blue-100 rounded-lg mr-3">
-                            <i class="fas fa-dumbbell text-blue-600"></i>
+                        <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mr-4 shadow-lg">
+                            <i class="fas fa-dumbbell text-white text-xl"></i>
                         </div>
                         <div>
-                            <div class="font-medium text-gray-900">${data.exerciseName}</div>
+                            <div class="font-bold text-gray-900 text-lg">${data.exerciseName}</div>
                             <div class="text-sm text-gray-600">${data.date} • ${data.sets} sets × ${data.reps} reps</div>
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="text-lg font-semibold text-blue-600">${data.weight} lbs</div>
-                        <div class="text-xs text-gray-500">Workout</div>
+                        <div class="text-2xl font-bold text-blue-600">${data.weight} lbs</div>
+                        <div class="text-xs text-gray-500 font-semibold">Workout</div>
                     </div>
                 `;
             } else if (type === 'meal') {
                 activityElement.innerHTML = `
                     <div class="flex items-center">
-                        <div class="p-2 bg-green-100 rounded-lg mr-3">
-                            <i class="fas fa-utensils text-green-600"></i>
+                        <div class="p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mr-4 shadow-lg">
+                            <i class="fas fa-utensils text-white text-xl"></i>
                         </div>
                         <div>
-                            <div class="font-medium text-gray-900">${data.mealName}</div>
+                            <div class="font-bold text-gray-900 text-lg">${data.mealName}</div>
                             <div class="text-sm text-gray-600">${data.date} • ${data.calories} calories</div>
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="text-sm text-gray-600">P: ${data.protein}g | C: ${data.carbs}g | F: ${data.fats}g</div>
-                        <div class="text-xs text-gray-500">Meal</div>
+                        <div class="text-sm text-gray-600 font-semibold">P: ${data.protein}g | C: ${data.carbs}g | F: ${data.fats}g</div>
+                        <div class="text-xs text-gray-500 font-semibold">Meal</div>
                     </div>
                 `;
             }
@@ -638,27 +821,45 @@
             activitiesList.insertBefore(activityElement, activitiesList.firstChild);
         }
 
-        // Show success message
+        // Show success message with animations
         function showSuccessMessage(message) {
             const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-            notification.textContent = message;
+            notification.className = 'fixed top-6 right-6 bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 bounce-in border border-green-400';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-3 text-xl"></i>
+                    <span class="font-semibold">${message}</span>
+                </div>
+            `;
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.remove();
+                notification.style.transform = 'translateX(100%)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
             }, 3000);
         }
 
-        // Show error message
+        // Show error message with animations
         function showErrorMessage(message) {
             const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-            notification.textContent = message;
+            notification.className = 'fixed top-6 right-6 bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 bounce-in border border-red-400';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle mr-3 text-xl"></i>
+                    <span class="font-semibold">${message}</span>
+                </div>
+            `;
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.remove();
+                notification.style.transform = 'translateX(100%)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
             }, 5000);
         }
 
