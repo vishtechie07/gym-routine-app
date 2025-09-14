@@ -11,8 +11,8 @@
     <groupId>com.gymtracker</groupId>
     <artifactId>gym-tracker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gym-tracker</name>
-    <description>Fitness tracking application with workout logging, meal tracking, and intelligent AI insights</description>
+    <name>habitual-ai</name>
+    <description>Habitual AI - Fitness tracking application with workout logging, meal tracking, and intelligent AI insights</description>
     <properties>
         <java.version>17</java.version>
     </properties>

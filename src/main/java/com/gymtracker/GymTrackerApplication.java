@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Main application class for the Gym & Meal Tracker application.
- * Provides fitness tracking capabilities with AI-powered insights and recommendations.
+ * Main application class for Habitual AI - Fitness Tracking Application.
+ * Provides comprehensive fitness tracking capabilities with AI-powered insights and recommendations.
  */
 @SpringBootApplication
 public class GymTrackerApplication {
