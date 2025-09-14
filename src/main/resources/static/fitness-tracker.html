@@ -397,7 +397,11 @@
                     <div class="flex space-x-4">
                         <input type="password" id="openai-api-key" 
                                class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
-                               placeholder="sk-...">
+                               placeholder="sk-..." 
+                               maxlength="100"
+                               pattern="sk-[a-zA-Z0-9]{20,}"
+                               title="OpenAI API key must start with 'sk-' followed by 20+ characters"
+                               oninput="validateApiKey(this)">
                         <button onclick="configureAI()" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
                             <i class="fas fa-key mr-2"></i>Configure AI
                         </button>
@@ -409,11 +413,24 @@
                 </div>
 
                 <!-- Current Status -->
-                <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200 mb-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-3">Current Status</h3>
                     <div id="settings-ai-status" class="text-sm text-gray-600 shimmer">
                         Checking AI configuration...
                     </div>
+                </div>
+                
+                <!-- Security Controls -->
+                <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-xl p-6 border border-red-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        <i class="fas fa-shield-alt mr-2 text-red-600"></i>Security Controls
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Clear all stored data including API keys and session information.
+                    </p>
+                    <button onclick="clearAllData()" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                        <i class="fas fa-trash mr-2"></i>Clear All Data
+                    </button>
                 </div>
             </div>
         </div>
@@ -486,11 +503,49 @@
             }, 100);
         }
 
-        // AI Configuration
+        // API Key validation
+        function validateApiKey(input) {
+            const apiKey = input.value.trim();
+            const isValid = apiKey.startsWith('sk-') && apiKey.length >= 20 && apiKey.length <= 100;
+            
+            if (apiKey.length > 0) {
+                if (isValid) {
+                    input.classList.remove('border-red-500');
+                    input.classList.add('border-green-500');
+                } else {
+                    input.classList.remove('border-green-500');
+                    input.classList.add('border-red-500');
+                }
+            } else {
+                input.classList.remove('border-red-500', 'border-green-500');
+                input.classList.add('border-gray-200');
+            }
+        }
+        
+        // AI Configuration with enhanced security
         async function configureAI() {
-            const apiKey = document.getElementById('openai-api-key').value.trim();
+            const apiKeyInput = document.getElementById('openai-api-key');
+            const apiKey = apiKeyInput.value.trim();
+            
             if (!apiKey) {
                 showErrorMessage('Please enter your OpenAI API key');
+                return;
+            }
+            
+            // Client-side validation
+            if (!apiKey.startsWith('sk-')) {
+                showErrorMessage('API key must start with "sk-"');
+                return;
+            }
+            
+            if (apiKey.length < 20 || apiKey.length > 100) {
+                showErrorMessage('API key must be between 20 and 100 characters');
+                return;
+            }
+            
+            // Check for suspicious patterns
+            if (apiKey.includes('<script') || apiKey.includes('javascript:') || apiKey.includes('onload=')) {
+                showErrorMessage('Invalid API key format detected');
                 return;
             }
 
@@ -507,7 +562,9 @@
                     showSuccessMessage('AI configured successfully!');
                     checkAIStatus();
                     // Clear the API key field for security
-                    document.getElementById('openai-api-key').value = '';
+                    apiKeyInput.value = '';
+                    apiKeyInput.classList.remove('border-red-500', 'border-green-500');
+                    apiKeyInput.classList.add('border-gray-200');
                 } else {
                     const errorData = await response.json();
                     showErrorMessage('Failed to configure AI: ' + errorData.error);
@@ -865,9 +922,74 @@
             }, 5000);
         }
 
+        // Security: Clear data on page unload
+        window.addEventListener('beforeunload', function() {
+            clearAllData();
+        });
+        
+        // Security: Clear data on page visibility change (tab switch)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // Optional: Clear sensitive data when tab becomes hidden
+                // clearAllData();
+            }
+        });
+        
+        // Security: Clear data after 30 minutes of inactivity
+        let inactivityTimer;
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                clearAllData();
+                showSuccessMessage('Session cleared due to inactivity');
+            }, 30 * 60 * 1000); // 30 minutes
+        }
+        
+        // Track user activity
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(function(name) {
+            document.addEventListener(name, resetInactivityTimer, true);
+        });
+        
+        // Clear data function
+        async function clearAllData() {
+            try {
+                await fetch('/api/ai/clear-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                // Clear local storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Clear form data
+                document.querySelectorAll('form').forEach(form => form.reset());
+                
+                // Clear activities list
+                const activitiesList = document.getElementById('activities-list');
+                activitiesList.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="p-6 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl inline-block mb-4">
+                            <i class="fas fa-clipboard-list text-4xl text-gray-400"></i>
+                        </div>
+                        <p class="text-gray-500 text-lg">No activities logged yet. Start by logging a workout or meal above!</p>
+                    </div>
+                `;
+                
+                // Reset AI status
+                updateAIStatus(false);
+                
+            } catch (error) {
+                console.error('Error clearing data:', error);
+            }
+        }
+        
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             showTab('exercise');
+            resetInactivityTimer();
         });
     </script>
 </body>

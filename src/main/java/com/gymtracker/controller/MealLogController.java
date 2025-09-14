@@ -29,6 +29,16 @@ public class MealLogController {
     @PostMapping("/log")
     public ResponseEntity<MealLog> logMeal(@Valid @RequestBody MealLogRequest request) {
         try {
+            // Additional security validation
+            if (request.getMealName() != null) {
+                String mealName = request.getMealName().trim();
+                // Check for XSS patterns
+                if (mealName.contains("<script") || mealName.contains("javascript:") || 
+                    mealName.contains("onload=") || mealName.contains("onerror=")) {
+                    return ResponseEntity.badRequest().body(null);
+                }
+            }
+            
             MealLog createdMeal = mealLogService.createMealLog(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdMeal);
         } catch (IllegalArgumentException e) {

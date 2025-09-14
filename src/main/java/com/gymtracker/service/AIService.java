@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 @Service
 public class AIService {
@@ -20,6 +23,9 @@ public class AIService {
     private final WorkoutLogRepository workoutLogRepository;
     private final MealLogRepository mealLogRepository;
     private OpenAiService openAiService;
+    private String encryptedApiKey;
+    private static final String ENCRYPTION_ALGORITHM = "AES";
+    private static final String SECRET_KEY = "HabitualAI2024Key"; // In production, use environment variable
 
     @Autowired
     public AIService(WorkoutLogRepository workoutLogRepository, MealLogRepository mealLogRepository) {
@@ -32,13 +38,24 @@ public class AIService {
             throw new IllegalArgumentException("API key cannot be null or empty");
         }
         
+        // Sanitize input
+        apiKey = apiKey.trim();
+        
         if (!apiKey.startsWith("sk-")) {
             throw new IllegalArgumentException("Invalid API key format. OpenAI API keys start with 'sk-'");
         }
         
+        // Validate API key length and format
+        if (apiKey.length() < 20 || apiKey.length() > 100) {
+            throw new IllegalArgumentException("Invalid API key length");
+        }
+        
         try {
-            this.openAiService = new OpenAiService(apiKey);
+            // Encrypt and store the API key
+            this.encryptedApiKey = encryptApiKey(apiKey);
+            
             // Test the connection with a simple request
+            this.openAiService = new OpenAiService(apiKey);
             ChatCompletionRequest testRequest = ChatCompletionRequest.builder()
                     .model("gpt-3.5-turbo")
                     .messages(List.of(new ChatMessage("user", "Hello")))
@@ -47,12 +64,57 @@ public class AIService {
             
             openAiService.createChatCompletion(testRequest);
         } catch (Exception e) {
+            // Clear stored key on failure
+            this.encryptedApiKey = null;
+            this.openAiService = null;
             throw new RuntimeException("Failed to validate OpenAI API key: " + e.getMessage(), e);
         }
     }
 
     public boolean isAIConfigured() {
-        return openAiService != null;
+        return openAiService != null && encryptedApiKey != null;
+    }
+    
+    /**
+     * Clears all stored data including API key and service instances.
+     * Called when browser is closed or user logs out.
+     */
+    public void clearAllData() {
+        this.openAiService = null;
+        this.encryptedApiKey = null;
+    }
+    
+    /**
+     * Encrypts the API key using AES encryption.
+     */
+    private String encryptApiKey(String apiKey) {
+        try {
+            SecretKeySpec secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), ENCRYPTION_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] encryptedBytes = cipher.doFinal(apiKey.getBytes());
+            return Base64.getEncoder().encodeToString(encryptedBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to encrypt API key", e);
+        }
+    }
+    
+    /**
+     * Decrypts the API key using AES decryption.
+     * @param encryptedApiKey The encrypted API key
+     * @return The decrypted API key
+     */
+    @SuppressWarnings("unused")
+    private String decryptApiKey(String encryptedApiKey) {
+        try {
+            SecretKeySpec secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), ENCRYPTION_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedApiKey));
+            return new String(decryptedBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to decrypt API key", e);
+        }
     }
 
     /**

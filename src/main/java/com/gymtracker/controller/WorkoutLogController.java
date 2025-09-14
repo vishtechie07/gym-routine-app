@@ -29,6 +29,16 @@ public class WorkoutLogController {
     @PostMapping("/log")
     public ResponseEntity<WorkoutLog> logWorkout(@Valid @RequestBody WorkoutLogRequest request) {
         try {
+            // Additional security validation
+            if (request.getExerciseName() != null) {
+                String exerciseName = request.getExerciseName().trim();
+                // Check for XSS patterns
+                if (exerciseName.contains("<script") || exerciseName.contains("javascript:") || 
+                    exerciseName.contains("onload=") || exerciseName.contains("onerror=")) {
+                    return ResponseEntity.badRequest().body(null);
+                }
+            }
+            
             WorkoutLog createdWorkout = workoutLogService.createWorkoutLog(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdWorkout);
         } catch (IllegalArgumentException e) {
