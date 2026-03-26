@@ -23,7 +23,7 @@ public class WorkoutLogService {
         this.workoutLogRepository = workoutLogRepository;
     }
 
-    public WorkoutLog createWorkoutLog(WorkoutLogRequest request) {
+    public WorkoutLog createWorkoutLog(WorkoutLogRequest request, Long userId) {
         // Parse the date string to LocalDate
         LocalDate workoutDate;
         try {
@@ -32,9 +32,8 @@ public class WorkoutLogService {
             throw new IllegalArgumentException("Invalid date format. Date must be in YYYY-MM-DD format.");
         }
 
-        // Create the workout log entity
         WorkoutLog workoutLog = new WorkoutLog(
-                request.getUserId(),
+                userId,
                 workoutDate,
                 request.getExerciseName(),
                 request.getSets(),

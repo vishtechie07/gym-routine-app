@@ -14,9 +14,8 @@ public class WorkoutLog {
     private Long id;
 
     @NotNull(message = "User ID is required")
-    @Min(value = 1, message = "User ID must be a positive integer")
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @NotNull(message = "Date is required")
     @Column(name = "date", nullable = false)
@@ -49,7 +48,7 @@ public class WorkoutLog {
     public WorkoutLog() {}
 
     // Constructor with all fields
-    public WorkoutLog(Integer userId, LocalDate date, String exerciseName, Integer sets, Integer reps, BigDecimal weight) {
+    public WorkoutLog(Long userId, LocalDate date, String exerciseName, Integer sets, Integer reps, BigDecimal weight) {
         this.userId = userId;
         this.date = date;
         this.exerciseName = exerciseName;
@@ -67,11 +66,11 @@ public class WorkoutLog {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

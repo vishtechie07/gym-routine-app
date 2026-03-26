@@ -2,6 +2,7 @@ package com.gymtracker.controller;
 
 import com.gymtracker.dto.WorkoutLogRequest;
 import com.gymtracker.entity.WorkoutLog;
+import com.gymtracker.security.SecurityUtil;
 import com.gymtracker.service.WorkoutLogService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class WorkoutLogController {
                 }
             }
             
-            WorkoutLog createdWorkout = workoutLogService.createWorkoutLog(request);
+            WorkoutLog createdWorkout = workoutLogService.createWorkoutLog(request, SecurityUtil.currentUserId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdWorkout);
         } catch (IllegalArgumentException e) {
             throw e;

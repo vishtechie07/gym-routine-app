@@ -5,10 +5,6 @@ import java.math.BigDecimal;
 
 public class WorkoutLogRequest {
 
-    @NotNull(message = "User ID is required")
-    @Min(value = 1, message = "User ID must be a positive integer")
-    private Integer userId;
-
     @NotBlank(message = "Date is required")
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Date must be in YYYY-MM-DD format")
     private String date;
@@ -36,8 +32,7 @@ public class WorkoutLogRequest {
     public WorkoutLogRequest() {}
 
     // Constructor with all fields
-    public WorkoutLogRequest(Integer userId, String date, String exerciseName, Integer sets, Integer reps, BigDecimal weight) {
-        this.userId = userId;
+    public WorkoutLogRequest(String date, String exerciseName, Integer sets, Integer reps, BigDecimal weight) {
         this.date = date;
         this.exerciseName = exerciseName;
         this.sets = sets;
@@ -46,14 +41,6 @@ public class WorkoutLogRequest {
     }
 
     // Getters and Setters
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
     public String getDate() {
         return date;
     }

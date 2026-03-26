@@ -5,10 +5,6 @@ import java.math.BigDecimal;
 
 public class MealLogRequest {
 
-    @NotNull(message = "User ID is required")
-    @Min(value = 1, message = "User ID must be a positive integer")
-    private Integer userId;
-
     @NotBlank(message = "Date is required")
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Date must be in YYYY-MM-DD format")
     private String date;
@@ -37,27 +33,18 @@ public class MealLogRequest {
     @Digits(integer = 4, fraction = 1, message = "Fats can have up to 4 digits before decimal and 1 after")
     private BigDecimal fats;
 
-    // Default constructor
+    @Pattern(regexp = "^$|^([01]\\d|2[0-3]):[0-5]\\d$", message = "mealTime must be HH:mm (24-hour)")
+    private String mealTime;
+
     public MealLogRequest() {}
 
-    // Constructor with all fields
-    public MealLogRequest(Integer userId, String date, String mealName, Integer calories, BigDecimal protein, BigDecimal carbs, BigDecimal fats) {
-        this.userId = userId;
+    public MealLogRequest(String date, String mealName, Integer calories, BigDecimal protein, BigDecimal carbs, BigDecimal fats) {
         this.date = date;
         this.mealName = mealName;
         this.calories = calories;
         this.protein = protein;
         this.carbs = carbs;
         this.fats = fats;
-    }
-
-    // Getters and Setters
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getDate() {
@@ -106,5 +93,13 @@ public class MealLogRequest {
 
     public void setFats(BigDecimal fats) {
         this.fats = fats;
+    }
+
+    public String getMealTime() {
+        return mealTime;
+    }
+
+    public void setMealTime(String mealTime) {
+        this.mealTime = mealTime;
     }
 }

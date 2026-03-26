@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "meal_logs")
@@ -14,9 +15,8 @@ public class MealLog {
     private Long id;
 
     @NotNull(message = "User ID is required")
-    @Min(value = 1, message = "User ID must be a positive integer")
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @NotNull(message = "Date is required")
     @Column(name = "date", nullable = false)
@@ -51,11 +51,12 @@ public class MealLog {
     @Column(name = "fats", nullable = false, precision = 5, scale = 1)
     private BigDecimal fats;
 
-    // Default constructor
+    @Column(name = "meal_time")
+    private LocalTime mealTime;
+
     public MealLog() {}
 
-    // Constructor with all fields
-    public MealLog(Integer userId, LocalDate date, String mealName, Integer calories, BigDecimal protein, BigDecimal carbs, BigDecimal fats) {
+    public MealLog(Long userId, LocalDate date, String mealName, Integer calories, BigDecimal protein, BigDecimal carbs, BigDecimal fats, LocalTime mealTime) {
         this.userId = userId;
         this.date = date;
         this.mealName = mealName;
@@ -63,9 +64,9 @@ public class MealLog {
         this.protein = protein;
         this.carbs = carbs;
         this.fats = fats;
+        this.mealTime = mealTime;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -74,11 +75,11 @@ public class MealLog {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -130,6 +131,14 @@ public class MealLog {
         this.fats = fats;
     }
 
+    public LocalTime getMealTime() {
+        return mealTime;
+    }
+
+    public void setMealTime(LocalTime mealTime) {
+        this.mealTime = mealTime;
+    }
+
     @Override
     public String toString() {
         return "MealLog{" +
@@ -141,6 +150,7 @@ public class MealLog {
                 ", protein=" + protein +
                 ", carbs=" + carbs +
                 ", fats=" + fats +
+                ", mealTime=" + mealTime +
                 '}';
     }
 }

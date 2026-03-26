@@ -47,3 +47,7 @@ Thumbs.db
 # Application specific
 application-local.properties
 application-prod.properties
+
+# Local / tooling
+scripts/__pycache__/
+*.pyc

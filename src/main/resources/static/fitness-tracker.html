@@ -3,14 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym & Meal Tracker with AI</title>
+    <title>Habitual AI — Neural Training OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
         
-        * {
-            font-family: 'Inter', sans-serif;
+        :root {
+            --habit-bg: #0a0f14;
+            --habit-surface: #141a20;
+            --habit-surface-high: #1a2027;
+            --habit-primary: #3adffa;
+            --habit-secondary: #ac8aff;
+            --habit-on: #e7ebf3;
+            --habit-muted: #a7abb2;
+        }
+        
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        body { font-family: 'Inter', sans-serif; }
+        
+        .habit-header-glass {
+            background: rgba(14, 20, 25, 0.72);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(67, 72, 78, 0.2);
+        }
+        
+        .habit-card {
+            background: rgba(26, 32, 39, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(67, 72, 78, 0.25);
+            box-shadow: 0 10px 40px rgba(58, 223, 250, 0.06);
+        }
+        
+        .habit-btn-primary {
+            background: linear-gradient(135deg, #3adffa 0%, #00cbe6 100%);
+            box-shadow: 0 10px 30px rgba(34, 211, 238, 0.18);
+        }
+        
+        .habit-nav-active.nav-pill,
+        button.habit-nav-active.mob-nav {
+            background: rgba(58, 223, 250, 0.12);
+            color: #3adffa !important;
+            border-color: rgba(58, 223, 250, 0.35);
         }
         
         .gradient-bg {
@@ -80,6 +114,27 @@
             animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
         
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in, .slide-in, .bounce-in {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+            .tab-transition {
+                transition-duration: 0.01ms !important;
+            }
+            .card-hover {
+                transition: none !important;
+            }
+            .card-hover:hover {
+                transform: none;
+            }
+        }
+
+        :where(button, a, input, select, textarea):focus-visible {
+            outline: 2px solid var(--habit-primary);
+            outline-offset: 2px;
+        }
+
         @keyframes pulse-ring {
             0% {
                 transform: scale(0.8);
@@ -111,7 +166,7 @@
         }
         
         .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3adffa 0%, #ac8aff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -127,386 +182,1169 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
+        
+        .neo-body { background: #05080c; }
+        .neo-grid {
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            animation: gridDrift 24s linear infinite;
+        }
+        @keyframes gridDrift {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 48px 48px, 48px 48px; }
+        }
+        .chromatic-panel {
+            border: 1px solid transparent;
+            background: linear-gradient(#0e1419, #0e1419) padding-box,
+                linear-gradient(135deg, rgba(0, 240, 255, 0.55), rgba(255, 0, 170, 0.45)) border-box;
+            box-shadow: 0 20px 50px -12px rgba(0, 240, 255, 0.12);
+        }
+        .neo-input {
+            background: #0b0f13;
+            border: 1px solid rgba(59, 73, 75, 0.5);
+            color: #e0e2e9;
+        }
+        .neo-input:focus {
+            outline: none;
+            border-color: rgba(0, 240, 255, 0.6);
+            box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.15);
+        }
+        .hud-ring {
+            background: conic-gradient(from 180deg, rgba(0,240,255,0.15), rgba(255,0,170,0.2), rgba(0,240,255,0.15));
+            border-radius: 50%;
+            filter: blur(0.5px);
+        }
+        .scanlines {
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 240, 255, 0.02) 2px,
+                rgba(0, 240, 255, 0.02) 4px
+            );
+            pointer-events: none;
+        }
+        .motion-lab-card {
+            background: linear-gradient(145deg, rgba(26, 32, 39, 0.95) 0%, rgba(14, 20, 25, 0.98) 100%);
+            border: 1px solid rgba(0, 240, 255, 0.12);
+            box-shadow: 0 20px 50px -20px rgba(0, 240, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .motion-lab-card:hover {
+            transform: translateY(-3px) scale(1.01);
+            border-color: rgba(255, 0, 170, 0.25);
+            box-shadow: 0 24px 60px -16px rgba(255, 0, 170, 0.12), 0 0 40px rgba(0, 240, 255, 0.08);
+        }
+        .motion-chip {
+            letter-spacing: 0.12em;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+        }
+        .tutorial-filter-active {
+            background: rgba(0, 240, 255, 0.14) !important;
+            color: #00f0ff !important;
+            border-color: rgba(0, 240, 255, 0.45) !important;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .video-frame-glow {
+            box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.15), 0 16px 48px rgba(0, 0, 0, 0.45);
+        }
     </style>
 </head>
-<body class="min-h-screen" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-    <!-- Header -->
-    <header class="glass-effect sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center">
-                    <div class="relative w-16 h-16 flex items-center justify-center">
-                        <div class="p-3 bg-white rounded-full shadow-lg floating z-10">
-                            <i class="fas fa-dumbbell text-2xl gradient-text"></i>
+<body class="min-h-screen text-[#e0e2e9] neo-body">
+    <div id="auth-view" class="min-h-screen flex flex-col items-center justify-center px-4 py-10 relative" style="background:#05080c;">
+        <div class="neo-grid absolute inset-0 opacity-50 pointer-events-none" aria-hidden="true"></div>
+        <div class="relative z-10 w-full max-w-md">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-lg chromatic-panel mb-4">
+                    <i class="fas fa-dumbbell text-2xl" style="background:linear-gradient(135deg,#00f0ff,#ff41af);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent"></i>
+                </div>
+                <h1 class="font-display text-3xl font-bold tracking-tight text-[#e0e2e9]">Habitual AI</h1>
+                <p class="text-xs text-[#00f0ff] mt-2 uppercase tracking-[0.2em]">Train in the future</p>
+            </div>
+            <div class="chromatic-panel rounded-xl p-6 md:p-8 backdrop-blur-xl">
+                <div class="flex mb-6 rounded-lg overflow-hidden border border-[#3b494b]/50 p-0.5 bg-[#0b0f13]">
+                    <button type="button" id="auth-tab-login" class="flex-1 py-2.5 text-sm font-semibold rounded-md bg-[#00f0ff]/15 text-[#00f0ff]">Sign in</button>
+                    <button type="button" id="auth-tab-register" class="flex-1 py-2.5 text-sm font-semibold rounded-md text-[#b9cacb] hover:text-[#e0e2e9]">Register</button>
+                </div>
+                <div id="auth-login-panel">
+                    <form id="auth-login-form" class="space-y-4">
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Email</label>
+                            <input type="email" id="login-email" required autocomplete="username" class="neo-input mt-1 w-full rounded-md px-3 py-2.5 text-sm">
                         </div>
-                        <div class="absolute inset-0 rounded-full pulse-ring bg-gradient-to-r from-blue-500 to-purple-600 opacity-60"></div>
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Password</label>
+                            <input type="password" id="login-password" required autocomplete="current-password" class="neo-input mt-1 w-full rounded-md px-3 py-2.5 text-sm">
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-md font-bold text-sm text-[#00363a] bg-gradient-to-r from-[#00f0ff] to-[#00cbe6] shadow-[0_10px_30px_rgba(0,240,255,0.2)] hover:scale-[1.02] transition">Enter system</button>
+                    </form>
+                </div>
+                <div id="auth-register-panel" class="hidden space-y-4">
+                    <form id="auth-register-form" class="space-y-4">
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Display name</label>
+                            <input type="text" id="reg-name" required minlength="1" maxlength="120" class="neo-input mt-1 w-full rounded-md px-3 py-2.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Email</label>
+                            <input type="email" id="reg-email" required autocomplete="email" class="neo-input mt-1 w-full rounded-md px-3 py-2.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Password (min 8)</label>
+                            <input type="password" id="reg-password" required minlength="8" autocomplete="new-password" class="neo-input mt-1 w-full rounded-md px-3 py-2.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Confirm password</label>
+                            <input type="password" id="reg-password2" required minlength="8" autocomplete="new-password" class="neo-input mt-1 w-full rounded-md px-3 py-2.5 text-sm">
+                        </div>
+                        <label class="flex items-start gap-2 text-xs text-[#b9cacb] cursor-pointer">
+                            <input type="checkbox" id="reg-terms" required class="mt-1 rounded border-[#3b494b]">
+                            <span>I agree to the terms of use</span>
+                        </label>
+                        <button type="submit" class="w-full py-3 rounded-md font-bold text-sm text-[#e0e2e9] border border-transparent bg-gradient-to-r from-[#00f0ff]/20 to-[#ff41af]/20 hover:from-[#00f0ff]/30 hover:to-[#ff41af]/30 transition">Initialize profile</button>
+                    </form>
+                </div>
+                <p class="text-center text-[10px] text-[#71767c] mt-6 tracking-wide">Encrypted session · PostgreSQL · JWT</p>
+            </div>
+            <p id="auth-error" class="text-red-400 text-sm text-center mt-4 hidden"></p>
+        </div>
+    </div>
+
+    <div id="app-shell" class="hidden min-h-screen" style="background: linear-gradient(180deg, #05080c 0%, #0a0f14 40%);">
+    <header class="habit-header-glass sticky top-0 z-50 border-b border-[#00f0ff]/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap justify-between items-center gap-4 h-auto md:h-20 py-3 md:py-0">
+                <div class="flex items-center min-w-0">
+                    <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
+                        <div class="absolute inset-0 hud-ring opacity-30 scale-110"></div>
+                        <div class="p-3 rounded-2xl bg-[#1a2027] border border-[#00f0ff]/20 floating z-10 relative">
+                            <i class="fas fa-dumbbell text-2xl" style="background:linear-gradient(135deg,#00f0ff,#ff41af);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent"></i>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <h1 class="text-2xl font-bold text-white">Habitual AI</h1>
-                        <p class="text-sm text-white/80">Your Personal Training Companion</p>
+                    <div class="ml-3 min-w-0">
+                        <h1 class="text-xl md:text-2xl font-bold font-display tracking-tight text-[#e0e2e9] truncate">Habitual AI</h1>
+                        <p class="text-[10px] md:text-xs text-[#00f0ff]/70 uppercase tracking-widest">Neural Training OS</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="showTab('exercise')" id="exercise-tab" class="px-6 py-3 text-sm font-medium text-white bg-white/20 rounded-full hover:bg-white/30 tab-transition backdrop-blur-sm border border-white/30">
+                <div class="flex items-center gap-2 flex-wrap justify-end">
+                <nav class="hidden md:flex flex-wrap items-center gap-2" aria-label="Main">
+                    <button type="button" onclick="showTab('home')" id="home-tab" class="nav-pill px-4 py-2 text-sm font-medium rounded-full border border-[#43484e]/40 text-[#a7abb2] hover:text-[#e7ebf3] hover:bg-[#1a2027]/80 transition tab-transition">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </button>
+                    <button type="button" onclick="showTab('exercise')" id="exercise-tab" class="nav-pill px-4 py-2 text-sm font-medium rounded-full border border-[#43484e]/40 text-[#a7abb2] hover:text-[#e7ebf3] hover:bg-[#1a2027]/80 transition tab-transition">
                         <i class="fas fa-dumbbell mr-2"></i>Exercise
                     </button>
-                    <button onclick="showTab('diet')" id="diet-tab" class="px-6 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/20 rounded-full tab-transition backdrop-blur-sm border border-white/20">
+                    <button type="button" onclick="showTab('diet')" id="diet-tab" class="nav-pill px-4 py-2 text-sm font-medium rounded-full border border-[#43484e]/40 text-[#a7abb2] hover:text-[#e7ebf3] hover:bg-[#1a2027]/80 transition tab-transition">
                         <i class="fas fa-utensils mr-2"></i>Diet
                     </button>
-                    <button onclick="showTab('ai')" id="ai-tab" class="px-6 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/20 rounded-full tab-transition backdrop-blur-sm border border-white/20">
-                        <i class="fas fa-brain mr-2"></i>AI Insights
+                    <button type="button" onclick="showTab('tutorials')" id="tutorials-tab" class="nav-pill px-4 py-2 text-sm font-medium rounded-full border border-[#43484e]/40 text-[#a7abb2] hover:text-[#e7ebf3] hover:bg-[#1a2027]/80 transition tab-transition">
+                        <i class="fas fa-play-circle mr-2"></i>Motion Lab
                     </button>
-                    <button onclick="showTab('settings')" id="settings-tab" class="px-6 py-3 text-sm font-medium text-white/80 hover:text-white hover:bg-white/20 rounded-full tab-transition backdrop-blur-sm border border-white/20">
+                    <button type="button" onclick="showTab('ai')" id="ai-tab" class="nav-pill px-4 py-2 text-sm font-medium rounded-full border border-[#43484e]/40 text-[#a7abb2] hover:text-[#e7ebf3] hover:bg-[#1a2027]/80 transition tab-transition">
+                        <i class="fas fa-brain mr-2"></i>AI
+                    </button>
+                    <button type="button" onclick="showTab('settings')" id="settings-tab" class="nav-pill px-4 py-2 text-sm font-medium rounded-full border border-[#43484e]/40 text-[#a7abb2] hover:text-[#e7ebf3] hover:bg-[#1a2027]/80 transition tab-transition">
                         <i class="fas fa-cog mr-2"></i>Settings
                     </button>
+                </nav>
+                <button type="button" onclick="logout()" class="px-4 py-2 text-sm font-medium rounded-full border border-[#ff41af]/40 text-[#ffafd2] hover:bg-[#ff41af]/10 transition">
+                    <i class="fas fa-power-off mr-2"></i>Logout
+                </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
-        <!-- Exercise Log Form -->
-        <div id="exercise-form" class="tab-content fade-in">
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20">
+    <main class="max-w-7xl mx-auto py-8 md:py-12 px-4 sm:px-6 lg:px-8 space-y-10 pb-28 md:pb-12">
+        <div id="home-dashboard" class="tab-content fade-in space-y-8">
+            <div class="habit-card rounded-3xl p-6 md:p-8 card-hover">
+                <div class="flex flex-col lg:flex-row lg:items-stretch gap-6">
+                    <div class="flex-1 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-[0.25em] text-[#00f0ff]/80 font-semibold" id="dash-greeting">Pilot channel</p>
+                            <p class="text-3xl md:text-5xl font-display font-bold tracking-tight mt-2 bg-gradient-to-r from-[#e0e2e9] to-[#b9cacb] bg-clip-text text-transparent" id="dash-display-name">—</p>
+                            <p class="text-sm text-[#b9cacb] mt-2" id="dash-date"></p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-[10px] uppercase text-[#ff41af] border border-[#ff41af]/30 px-2 py-1 rounded-full">Live sync</span>
+                            <span class="text-[10px] text-[#71767c]" id="dash-email"></span>
+                        </div>
+                    </div>
+                    <div class="hidden lg:flex w-36 shrink-0 items-center justify-center">
+                        <div class="relative w-28 h-28 rounded-full border border-[#00f0ff]/20 flex items-center justify-center" style="box-shadow:0 0 40px rgba(0,240,255,0.08)">
+                            <div class="absolute inset-2 rounded-full border border-[#ff41af]/20 animate-pulse"></div>
+                            <i class="fas fa-bolt text-3xl text-[#00f0ff]/90"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+                    <div class="rounded-xl bg-[#181c20] p-4 border border-[#00f0ff]/15 relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 text-6xl font-display font-black text-[#00f0ff]/5 group-hover:text-[#00f0ff]/10 transition">01</div>
+                        <p class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Week load</p>
+                        <p class="text-3xl font-display font-bold text-[#00f0ff] mt-1" id="dash-workouts">—</p>
+                        <p class="text-[10px] text-[#71767c] mt-0.5">sessions logged</p>
+                    </div>
+                    <div class="rounded-xl bg-[#181c20] p-4 border border-[#00f0ff]/15 relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 text-6xl font-display font-black text-[#ff41af]/5 group-hover:text-[#ff41af]/10 transition">02</div>
+                        <p class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Tonnage</p>
+                        <p class="text-3xl font-display font-bold text-[#00f0ff] mt-1" id="dash-volume">—</p>
+                        <p class="text-[10px] text-[#71767c] mt-0.5">lb × reps</p>
+                    </div>
+                    <div class="rounded-xl bg-[#181c20] p-4 border border-[#00f0ff]/15 relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 text-6xl font-display font-black text-[#00f0ff]/5 group-hover:text-[#00f0ff]/10 transition">03</div>
+                        <p class="text-[10px] uppercase tracking-wider text-[#b9cacb]">Fuel / day</p>
+                        <p class="text-3xl font-display font-bold text-[#00f0ff] mt-1" id="dash-calories">—</p>
+                        <p class="text-[10px] text-[#71767c] mt-0.5">7d rolling avg</p>
+                    </div>
+                    <div class="rounded-xl bg-[#181c20] p-4 border border-[#ff41af]/25 relative overflow-hidden">
+                        <p class="text-[10px] uppercase tracking-wider text-[#ffafd2]">Neural layer</p>
+                        <p class="text-xl font-semibold mt-1 text-[#ff41af]" id="dash-ai">—</p>
+                        <p class="text-[10px] text-[#71767c] mt-0.5">OpenAI bridge</p>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                    <button type="button" onclick="showTab('exercise')" class="habit-btn-primary flex-1 text-[#004b56] font-semibold py-4 rounded-2xl hover:scale-[1.02] transition transform">
+                        <i class="fas fa-dumbbell mr-2"></i>Log workout
+                    </button>
+                    <button type="button" onclick="showTab('diet')" class="flex-1 py-4 rounded-2xl border border-[#43484e]/50 text-[#e7ebf3] font-semibold hover:bg-[#1a2027] transition">
+                        <i class="fas fa-utensils mr-2"></i>Log meal
+                    </button>
+                    <button type="button" onclick="showTab('tutorials')" class="flex-1 py-4 rounded-2xl border border-[#ac8aff]/35 text-[#dac9ff] font-semibold hover:bg-[#5516be]/25 transition bg-[#141a20]/80">
+                        <i class="fas fa-play-circle mr-2 text-[#ac8aff]"></i>Motion Lab
+                    </button>
+                </div>
+            </div>
+            <div class="habit-card rounded-3xl p-6 md:p-8 card-hover">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-3 rounded-xl bg-[#141a20] border border-[#43484e]/30">
+                        <i class="fas fa-history text-[#3adffa] text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-display font-bold text-[#e7ebf3]">Recent activity</h2>
+                </div>
+                <div id="dashboard-recent-list" class="space-y-3">
+                    <div class="text-center py-10 text-[#a7abb2]">
+                        <i class="fas fa-spinner fa-spin text-2xl text-[#3adffa] mb-2"></i>
+                        <p>Loading…</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center text-xs text-[#71767c] max-w-2xl mx-auto">Data is stored in your app database. OpenAI is only used when you configure an API key and run AI features.</p>
+        </div>
+
+        <div id="exercise-form" class="tab-content hidden">
+            <div class="habit-card rounded-3xl p-8 card-hover">
                 <div class="flex items-center mb-8">
-                    <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mr-4">
-                        <i class="fas fa-dumbbell text-white text-2xl"></i>
+                    <div class="p-4 rounded-xl mr-4 bg-[#141a20] border border-[#43484e]/30">
+                        <i class="fas fa-dumbbell text-[#3adffa] text-2xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Log Your Workout</h2>
-                        <p class="text-gray-600">Track your exercises and build strength</p>
+                        <h2 class="text-2xl font-bold font-display text-[#e7ebf3]">Log Your Workout</h2>
+                        <p class="text-[#a7abb2]">Track your exercises and build strength</p>
                     </div>
                 </div>
                 <form id="workout-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="space-y-2">
-                        <label for="workout-userId" class="block text-sm font-semibold text-gray-700">User ID</label>
-                        <input type="number" id="workout-userId" name="userId" required min="1" 
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
-                               placeholder="1">
-                    </div>
-                    <div class="space-y-2">
-                        <label for="workout-date" class="block text-sm font-semibold text-gray-700">Date</label>
+                        <label for="workout-date" class="block text-sm font-semibold text-[#a7abb2]">Date</label>
                         <input type="date" id="workout-date" name="date" required
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80">
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]">
                     </div>
                     <div class="space-y-2">
-                        <label for="exercise-name" class="block text-sm font-semibold text-gray-700">Exercise Name</label>
-                        <input type="text" id="exercise-name" name="exerciseName" required
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
-                               placeholder="e.g., Bench Press">
+                        <label for="exercise-name" class="block text-sm font-semibold text-[#a7abb2]">Exercise Name</label>
+                        <div class="relative">
+                            <input type="text" id="exercise-name" name="exerciseName" required
+                                   class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
+                                   placeholder="e.g., Bench Press" autocomplete="off">
+                            <div id="exercise-suggestions" class="absolute z-50 w-full mt-1 bg-[#1a2027] border border-[#43484e]/50 rounded-xl shadow-lg max-h-60 overflow-y-auto hidden">
+                            </div>
+                        </div>
                     </div>
                     <div class="space-y-2">
-                        <label for="workout-sets" class="block text-sm font-semibold text-gray-700">Sets</label>
+                        <label for="workout-sets" class="block text-sm font-semibold text-[#a7abb2]">Sets</label>
                         <input type="number" id="workout-sets" name="sets" required min="1" max="100"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
                                placeholder="3">
                     </div>
                     <div class="space-y-2">
-                        <label for="workout-reps" class="block text-sm font-semibold text-gray-700">Reps</label>
+                        <label for="workout-reps" class="block text-sm font-semibold text-[#a7abb2]">Reps</label>
                         <input type="number" id="workout-reps" name="reps" required min="1" max="1000"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
                                placeholder="10">
                     </div>
                     <div class="space-y-2">
-                        <label for="workout-weight" class="block text-sm font-semibold text-gray-700">Weight (lbs)</label>
+                        <label for="workout-weight" class="block text-sm font-semibold text-[#a7abb2]">Weight (lbs)</label>
                         <input type="number" id="workout-weight" name="weight" required min="0" step="0.5"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
                                placeholder="135.0">
                     </div>
                 </form>
                 <div class="mt-8 flex justify-center">
-                    <button onclick="submitWorkout()" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                    <button onclick="submitWorkout()" class="habit-btn-primary text-[#004b56] px-8 py-4 rounded-2xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 font-semibold">
                         <i class="fas fa-plus mr-2"></i>Log Workout
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Diet Log Form -->
         <div id="diet-form" class="tab-content hidden fade-in">
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20">
+            <div class="habit-card rounded-3xl p-8 card-hover">
                 <div class="flex items-center mb-8">
-                    <div class="p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mr-4">
-                        <i class="fas fa-utensils text-white text-2xl"></i>
+                    <div class="p-4 rounded-xl mr-4 bg-[#141a20] border border-[#43484e]/30">
+                        <i class="fas fa-utensils text-[#3adffa] text-2xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Log Your Meal</h2>
-                        <p class="text-gray-600">Track your nutrition and fuel your body</p>
+                        <h2 class="text-2xl font-bold font-display text-[#e7ebf3]">Log Your Meal</h2>
+                        <p class="text-[#a7abb2]">Track your nutrition and fuel your body</p>
                     </div>
                 </div>
-                <form id="meal-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <form id="meal-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <input type="hidden" id="meal-edit-id" value="">
                     <div class="space-y-2">
-                        <label for="meal-userId" class="block text-sm font-semibold text-gray-700">User ID</label>
-                        <input type="number" id="meal-userId" name="userId" required min="1"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
-                               placeholder="1">
-                    </div>
-                    <div class="space-y-2">
-                        <label for="meal-date" class="block text-sm font-semibold text-gray-700">Date</label>
+                        <label for="meal-date" class="block text-sm font-semibold text-[#a7abb2]">Date</label>
                         <input type="date" id="meal-date" name="date" required
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80">
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]">
+                    </div>
+                    <div class="space-y-2 md:col-span-2 lg:col-span-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label for="meal-name" class="block text-sm font-semibold text-[#a7abb2]">Meal Name</label>
+                            <button type="button" onclick="fillMealFromAI()" id="meal-fill-ai-btn"
+                                    class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#3adffa]/40 text-[#3adffa] hover:bg-[#3adffa]/10 transition">
+                                <i class="fas fa-magic mr-1"></i>Fill from AI
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="meal-name" name="mealName" required
+                                   class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
+                                   placeholder="e.g., Greek yogurt with berries" autocomplete="off">
+                            <div id="meal-suggestions" class="absolute z-50 w-full mt-1 bg-[#1a2027] border border-[#43484e]/50 rounded-xl shadow-lg max-h-60 overflow-y-auto hidden">
+                            </div>
+                        </div>
+                        <p id="meal-slot-hint" class="text-xs text-[#71767c] hidden"></p>
                     </div>
                     <div class="space-y-2">
-                        <label for="meal-name" class="block text-sm font-semibold text-gray-700">Meal Name</label>
-                        <input type="text" id="meal-name" name="mealName" required
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
-                               placeholder="e.g., Breakfast">
+                        <label for="meal-time" class="block text-sm font-semibold text-[#a7abb2]">Time of day</label>
+                        <input type="time" id="meal-time" name="mealTime"
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]">
+                        <p class="text-[11px] text-[#71767c]">Leave blank to use current time when logging.</p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <button type="button" onclick="setMealPresetTime('08:00')" class="text-[11px] px-2.5 py-1 rounded-lg border border-[#43484e]/50 text-[#a7abb2] hover:border-[#3adffa]/40 hover:text-[#3adffa] transition">Breakfast</button>
+                            <button type="button" onclick="setMealPresetTime('12:30')" class="text-[11px] px-2.5 py-1 rounded-lg border border-[#43484e]/50 text-[#a7abb2] hover:border-[#3adffa]/40 hover:text-[#3adffa] transition">Lunch</button>
+                            <button type="button" onclick="setMealPresetTime('18:30')" class="text-[11px] px-2.5 py-1 rounded-lg border border-[#43484e]/50 text-[#a7abb2] hover:border-[#3adffa]/40 hover:text-[#3adffa] transition">Dinner</button>
+                            <button type="button" onclick="setMealPresetTime('15:00')" class="text-[11px] px-2.5 py-1 rounded-lg border border-[#43484e]/50 text-[#a7abb2] hover:border-[#3adffa]/40 hover:text-[#3adffa] transition">Snack</button>
+                        </div>
                     </div>
                     <div class="space-y-2">
-                        <label for="meal-calories" class="block text-sm font-semibold text-gray-700">Calories</label>
+                        <label for="meal-calories" class="block text-sm font-semibold text-[#a7abb2]">Calories</label>
                         <input type="number" id="meal-calories" name="calories" required min="0" max="10000"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
                                placeholder="500">
                     </div>
                     <div class="space-y-2">
-                        <label for="meal-protein" class="block text-sm font-semibold text-gray-700">Protein (g)</label>
+                        <label for="meal-protein" class="block text-sm font-semibold text-[#a7abb2]">Protein (g)</label>
                         <input type="number" id="meal-protein" name="protein" required min="0" step="0.1"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
                                placeholder="25.0">
                     </div>
                     <div class="space-y-2">
-                        <label for="meal-carbs" class="block text-sm font-semibold text-gray-700">Carbs (g)</label>
+                        <label for="meal-carbs" class="block text-sm font-semibold text-[#a7abb2]">Carbs (g)</label>
                         <input type="number" id="meal-carbs" name="carbs" required min="0" step="0.1"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
                                placeholder="50.0">
                     </div>
                     <div class="space-y-2">
-                        <label for="meal-fats" class="block text-sm font-semibold text-gray-700">Fats (g)</label>
+                        <label for="meal-fats" class="block text-sm font-semibold text-[#a7abb2]">Fats (g)</label>
                         <input type="number" id="meal-fats" name="fats" required min="0" step="0.1"
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80"
+                               class="w-full px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 bg-[#0e1419] text-[#e7ebf3]"
                                placeholder="15.0">
                     </div>
                 </form>
-                <div class="mt-8 flex justify-center">
-                    <button onclick="submitMeal()" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button type="button" id="meal-submit-btn" onclick="submitMeal()" class="habit-btn-primary text-[#004b56] px-8 py-4 rounded-2xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-200 font-semibold">
                         <i class="fas fa-plus mr-2"></i>Log Meal
+                    </button>
+                    <button type="button" id="meal-cancel-edit-btn" onclick="cancelMealEdit()" class="hidden text-sm font-semibold px-5 py-3 rounded-2xl border border-[#43484e]/60 text-[#a7abb2] hover:text-[#e7ebf3] hover:border-[#71767c] transition">
+                        Cancel edit
                     </button>
                 </div>
             </div>
+            <div class="habit-card rounded-3xl p-8 mt-6 card-hover">
+                <h3 class="text-lg font-bold font-display text-[#e7ebf3] mb-1">Meals for selected date</h3>
+                <p class="text-sm text-[#a7abb2] mb-4">Updates when you change the date above or after logging.</p>
+                <div id="meals-day-list" class="text-sm text-[#71767c]">Open the Diet tab to load meals for the selected date.</div>
+            </div>
         </div>
 
-        <!-- AI Insights Tab -->
+        <div id="tutorials-panel" class="tab-content hidden fade-in relative">
+            <div class="absolute inset-0 rounded-3xl scanlines opacity-40 pointer-events-none -z-10 max-h-64"></div>
+            <div class="space-y-8">
+                <div class="relative overflow-hidden rounded-3xl border border-[#00f0ff]/15 bg-[#0e1419]/90 p-6 md:p-10 chromatic-panel">
+                    <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#ff41af]/10 blur-3xl"></div>
+                    <div class="absolute -left-16 bottom-0 h-48 w-48 rounded-full bg-[#00f0ff]/10 blur-3xl"></div>
+                    <div class="relative z-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                        <div>
+                            <p class="motion-chip text-[#ff41af] mb-2"><i class="fas fa-bolt mr-2"></i>Stitch · Motion Lab</p>
+                            <h2 class="font-display text-3xl md:text-4xl font-bold text-[#e7ebf3] tracking-tight">Coach channels &amp; smart search</h2>
+                            <p class="mt-3 text-[#a7abb2] max-w-xl text-sm md:text-base leading-relaxed">
+                                Indexed library from <strong class="text-[#e7ebf3] font-normal">HASfit</strong>, <strong class="text-[#e7ebf3] font-normal">Jeff Nippard</strong>, <strong class="text-[#e7ebf3] font-normal">Renaissance Periodization</strong>, and <strong class="text-[#e7ebf3] font-normal">BEST EXERCISES</strong>. Search uses embeddings + keywords (OpenAI in Settings) only inside this corpus.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 justify-end max-w-2xl" id="lab-channel-bar" role="tablist" aria-label="Filter by channel">
+                            <button type="button" data-channel="all" class="lab-channel-btn tutorial-filter-active px-3 py-1.5 rounded-full text-[10px] font-semibold border border-[#43484e]/40 text-[#a7abb2] hover:border-[#00f0ff]/40 transition">All channels</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="rounded-2xl border border-[#43484e]/30 bg-[#0e1419]/80 p-4 md:p-5">
+                    <label for="motion-lab-search" class="sr-only">Search videos</label>
+                    <div class="relative flex flex-col sm:flex-row gap-3 sm:items-center">
+                        <div class="relative flex-1">
+                            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[#71767c] pointer-events-none"></i>
+                            <input type="search" id="motion-lab-search" placeholder="Search: squat cues, RDL, bench setup, mobility…" autocomplete="off"
+                                class="neo-input w-full rounded-2xl pl-11 pr-4 py-3.5 text-sm border border-[#43484e]/40">
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 shrink-0 text-[10px] text-[#71767c]">
+                            <button type="button" id="lab-sync-btn" onclick="syncMotionLabLibrary()" class="px-3 py-2 rounded-xl border border-[#00f0ff]/35 text-[#00f0ff] font-semibold hover:bg-[#00f0ff]/10 transition text-xs">
+                                <i class="fas fa-cloud-download-alt mr-1"></i>Sync library
+                            </button>
+                            <span id="motion-lab-search-badge" class="hidden px-2 py-1 rounded-full border border-[#ac8aff]/40 text-[#dac9ff]"><i class="fas fa-brain mr-1"></i>Smart rank</span>
+                            <span id="motion-lab-count" class="tabular-nums">—</span>
+                        </div>
+                    </div>
+                    <p id="lab-hint" class="text-[11px] text-[#71767c] mt-3">Log in to search. Server needs <code class="text-[#00f0ff]/80">YOUTUBE_API_KEY</code>; OpenAI in Settings enables semantic + keyword hybrid ranking.</p>
+                </div>
+                <div id="tutorial-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                </div>
+                <p class="text-center text-xs text-[#71767c] max-w-2xl mx-auto leading-relaxed">
+                    YouTube privacy-enhanced embeds. Thumbnails from <code class="text-[#00f0ff]/80">i.ytimg.com</code>. Content limited to the four configured channels.
+                </p>
+            </div>
+        </div>
+
         <div id="ai-form" class="tab-content hidden fade-in">
             <div class="space-y-8">
-                <!-- AI Status -->
-                <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20">
-                    <div class="flex items-center justify-between mb-6">
+                <div class="habit-card rounded-3xl p-8 card-hover">
+                    <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
                         <div class="flex items-center">
-                            <div class="p-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl mr-4">
-                                <i class="fas fa-brain text-white text-2xl"></i>
+                            <div class="p-4 rounded-xl mr-4 bg-[#141a20] border border-[#43484e]/30">
+                                <i class="fas fa-brain text-[#ac8aff] text-2xl"></i>
                             </div>
                             <div>
-                                <h2 class="text-2xl font-bold text-gray-900">AI Status</h2>
-                                <p class="text-gray-600">Your intelligent fitness companion</p>
+                                <h2 class="text-2xl font-bold font-display text-[#e7ebf3]">AI Status</h2>
+                                <p class="text-[#a7abb2]">Intelligent layer (violet accent)</p>
                             </div>
                         </div>
-                        <div id="ai-status" class="px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-800 shimmer">
+                        <div id="ai-status" class="px-4 py-2 rounded-full text-sm font-semibold bg-[#141a20] text-[#a7abb2] border border-[#43484e]/40">
                             Checking...
                         </div>
                     </div>
-                    <p class="text-gray-600 text-lg">Get personalized AI-powered insights for your fitness journey.</p>
+                    <p class="text-[#a7abb2] text-lg">Personalized insights when your API key is configured.</p>
                 </div>
 
-                <!-- AI Features -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-                    <!-- Workout Recommendations -->
-                    <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20 slide-in">
+                    <div class="habit-card rounded-3xl p-8 card-hover slide-in">
                         <div class="flex items-center mb-6">
-                            <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mr-4">
-                                <i class="fas fa-dumbbell text-white text-2xl"></i>
+                            <div class="p-4 rounded-xl mr-4 bg-[#141a20] border border-[#43484e]/30">
+                                <i class="fas fa-dumbbell text-[#3adffa] text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900">Workout Recommendations</h3>
+                            <h3 class="text-xl font-bold font-display text-[#e7ebf3]">Workout Recommendations</h3>
                         </div>
-                        <p class="text-gray-600 mb-6">Get AI-powered workout suggestions based on your history.</p>
-                        <div class="mb-6">
-                            <input type="number" id="ai-workout-userId" placeholder="User ID" min="1"
-                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80">
-                        </div>
-                        <button onclick="getWorkoutRecommendations()" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                        <p class="text-[#a7abb2] mb-6">Suggestions from your history.</p>
+                        <button onclick="getWorkoutRecommendations()" class="w-full habit-btn-primary text-[#004b56] px-6 py-3 rounded-2xl font-semibold hover:scale-[1.02] transition">
                             <i class="fas fa-magic mr-2"></i>Get Recommendations
                         </button>
-                        <div id="workout-recommendations-output" class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl hidden border border-blue-200">
-                            <div class="text-sm text-gray-700"></div>
+                        <div id="workout-recommendations-output" class="mt-6 p-4 bg-[#141a20] rounded-2xl hidden border border-[#43484e]/40">
+                            <div class="text-sm text-[#a7abb2] prose prose-invert"></div>
                         </div>
                     </div>
 
-                    <!-- Nutrition Advice -->
-                    <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20 slide-in" style="animation-delay: 0.1s">
+                    <div class="habit-card rounded-3xl p-8 card-hover slide-in" style="animation-delay: 0.1s">
                         <div class="flex items-center mb-6">
-                            <div class="p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mr-4">
-                                <i class="fas fa-apple-alt text-white text-2xl"></i>
+                            <div class="p-4 rounded-xl mr-4 bg-[#141a20] border border-[#43484e]/30">
+                                <i class="fas fa-apple-alt text-[#3adffa] text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900">Nutrition Coach</h3>
+                            <h3 class="text-xl font-bold font-display text-[#e7ebf3]">Nutrition Coach</h3>
                         </div>
-                        <p class="text-gray-600 mb-6">Get personalized nutrition advice and meal suggestions.</p>
-                        <div class="mb-6">
-                            <input type="number" id="ai-nutrition-userId" placeholder="User ID" min="1"
-                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200 bg-white/80">
-                        </div>
-                        <button onclick="getNutritionAdvice()" class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                        <p class="text-[#a7abb2] mb-6">Meal guidance aligned to your logs.</p>
+                        <button onclick="getNutritionAdvice()" class="w-full habit-btn-primary text-[#004b56] px-6 py-3 rounded-2xl font-semibold hover:scale-[1.02] transition">
                             <i class="fas fa-seedling mr-2"></i>Get Advice
                         </button>
-                        <div id="nutrition-advice-output" class="mt-6 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl hidden border border-green-200">
-                            <div class="text-sm text-gray-700"></div>
+                        <div id="nutrition-advice-output" class="mt-6 p-4 bg-[#141a20] rounded-2xl hidden border border-[#43484e]/40">
+                            <div class="text-sm text-[#a7abb2]"></div>
                         </div>
                     </div>
 
-                    <!-- Progress Analysis -->
-                    <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20 slide-in" style="animation-delay: 0.2s">
+                    <div class="habit-card rounded-3xl p-8 card-hover slide-in" style="animation-delay: 0.2s">
                         <div class="flex items-center mb-6">
-                            <div class="p-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl mr-4">
-                                <i class="fas fa-chart-line text-white text-2xl"></i>
+                            <div class="p-4 rounded-xl mr-4 bg-[#141a20] border border-[#43484e]/30">
+                                <i class="fas fa-chart-line text-[#ac8aff] text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900">Progress Analysis</h3>
+                            <h3 class="text-xl font-bold font-display text-[#e7ebf3]">Progress Analysis</h3>
                         </div>
-                        <p class="text-gray-600 mb-6">Get AI insights into your fitness progress and predictions.</p>
-                        <div class="mb-6">
-                            <input type="number" id="ai-progress-userId" placeholder="User ID" min="1"
-                                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 bg-white/80">
-                        </div>
-                        <button onclick="getProgressAnalysis()" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                        <p class="text-[#a7abb2] mb-6">Trends and predictions.</p>
+                        <button onclick="getProgressAnalysis()" class="w-full bg-[#5516be]/80 border border-[#ac8aff]/30 text-[#dac9ff] px-6 py-3 rounded-2xl font-semibold hover:bg-[#5516be] transition">
                             <i class="fas fa-chart-bar mr-2"></i>Analyze Progress
                         </button>
-                        <div id="progress-analysis-output" class="mt-6 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl hidden border border-purple-200">
-                            <div class="text-sm text-gray-700"></div>
+                        <div id="progress-analysis-output" class="mt-6 p-4 bg-[#141a20] rounded-2xl hidden border border-[#43484e]/40">
+                            <div class="text-sm text-[#a7abb2]"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Settings Tab -->
         <div id="settings-form" class="tab-content hidden fade-in">
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover border border-white/20">
+            <div class="habit-card rounded-3xl p-8 card-hover">
                 <div class="flex items-center mb-8">
-                    <div class="p-4 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl mr-4">
-                        <i class="fas fa-cog text-white text-2xl"></i>
+                    <div class="p-4 rounded-xl mr-4 bg-[#141a20] border border-[#43484e]/30">
+                        <i class="fas fa-cog text-[#3adffa] text-2xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">AI Settings</h2>
-                        <p class="text-gray-600">Configure your AI assistant</p>
+                        <h2 class="text-2xl font-bold font-display text-[#e7ebf3]">AI Settings</h2>
+                        <p class="text-[#a7abb2]">Configure your assistant</p>
                     </div>
                 </div>
                 
-                <!-- OpenAI API Key Configuration -->
                 <div class="mb-8">
-                    <label for="openai-api-key" class="block text-sm font-semibold text-gray-700 mb-3">
+                    <label for="openai-api-key" class="block text-sm font-semibold text-[#a7abb2] mb-3">
                         OpenAI API Key
                     </label>
-                    <div class="flex space-x-4">
-                        <input type="password" id="openai-api-key" 
-                               class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
-                               placeholder="sk-..." 
-                               maxlength="100"
-                               pattern="sk-[a-zA-Z0-9]{20,}"
-                               title="OpenAI API key must start with 'sk-' followed by 20+ characters"
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="password" id="openai-api-key"
+                               class="flex-1 px-4 py-3 border border-[#43484e]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/40 bg-[#0e1419] text-[#e7ebf3]"
+                               placeholder="sk-..."
+                               minlength="20"
+                               maxlength="512"
+                               title="OpenAI API key (sk-... or sk-proj-...; paste full key)"
                                oninput="validateApiKey(this)">
-                        <button onclick="configureAI()" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                        <button onclick="configureAI()" class="habit-btn-primary text-[#004b56] px-8 py-3 rounded-2xl font-semibold whitespace-nowrap">
                             <i class="fas fa-key mr-2"></i>Configure AI
                         </button>
                     </div>
-                    <p class="text-sm text-gray-500 mt-3">
+                    <p class="text-sm text-[#71767c] mt-3">
                         Enter your OpenAI API key to enable AI-powered fitness insights. 
-                        <a href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-600 hover:underline font-semibold">Get your API key here</a>
+                        <a href="https://platform.openai.com/api-keys" target="_blank" class="text-[#3adffa] hover:underline font-semibold">Get your API key here</a>
                     </p>
                 </div>
 
-                <!-- Current Status -->
-                <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200 mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Current Status</h3>
-                    <div id="settings-ai-status" class="text-sm text-gray-600 shimmer">
+                <div class="rounded-2xl p-6 bg-[#141a20] border border-[#43484e]/30 mb-6">
+                    <h3 class="text-lg font-semibold text-[#e7ebf3] mb-3">Current Status</h3>
+                    <div id="settings-ai-status" class="text-sm text-[#a7abb2] shimmer">
                         Checking AI configuration...
                     </div>
                 </div>
                 
-                <!-- Security Controls -->
-                <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-xl p-6 border border-red-200">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
-                        <i class="fas fa-shield-alt mr-2 text-red-600"></i>Security Controls
+                <div class="rounded-2xl p-6 bg-[#141a20] border border-red-900/40">
+                    <h3 class="text-lg font-semibold text-[#e7ebf3] mb-3">
+                        <i class="fas fa-shield-alt mr-2 text-red-400"></i>Security Controls
                     </h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        Clear all stored data including API keys and session information.
+                    <p class="text-sm text-[#a7abb2] mb-4">
+                        Clear server-side AI session and browser storage.
                     </p>
-                    <button onclick="clearAllData()" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-xl hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-500/20 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold">
+                    <button onclick="clearAllData()" class="bg-red-600/90 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition">
                         <i class="fas fa-trash mr-2"></i>Clear All Data
                     </button>
                 </div>
             </div>
         </div>
+    </main>
 
-        <!-- Recent Activities Section -->
-        <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl card-hover border border-white/20 mt-8">
-            <div class="px-8 py-6 border-b border-gray-200">
-                <div class="flex items-center">
-                    <div class="p-3 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl mr-4">
-                        <i class="fas fa-history text-white text-xl"></i>
+    <div id="tutorial-modal" class="fixed inset-0 z-[200] hidden" aria-modal="true" role="dialog" aria-labelledby="tutorial-modal-title">
+        <div id="tutorial-modal-backdrop" class="absolute inset-0 bg-black/75 backdrop-blur-sm" onclick="closeTutorialModal()"></div>
+        <div class="relative z-10 flex min-h-full items-center justify-center p-4 pointer-events-none">
+            <div id="tutorial-modal-panel" class="pointer-events-auto w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-3xl border border-[#00f0ff]/20 bg-[#0a0f14] shadow-[0_0_80px_rgba(0,240,255,0.12)]">
+                <div class="flex items-start justify-between gap-4 p-5 border-b border-[#43484e]/30">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-widest text-[#ff41af] mb-1">Motion Lab</p>
+                        <h3 id="tutorial-modal-title" class="font-display text-xl md:text-2xl font-bold text-[#e7ebf3] pr-4">—</h3>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900">Recent Activities</h3>
+                    <button type="button" onclick="closeTutorialModal()" class="shrink-0 w-10 h-10 rounded-full border border-[#43484e]/50 text-[#a7abb2] hover:text-[#e7ebf3] hover:border-[#00f0ff]/40 transition" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-            </div>
-            <div id="activities-list" class="p-8">
-                <div class="text-center py-12">
-                    <div class="p-6 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl inline-block mb-4">
-                        <i class="fas fa-clipboard-list text-4xl text-gray-400"></i>
+                <div class="p-5 md:p-8 space-y-6">
+                    <div id="tutorial-modal-grid" class="grid gap-6 max-w-3xl mx-auto">
+                        <div>
+                            <p class="motion-chip text-[#00f0ff] mb-2">Demonstration</p>
+                            <div class="aspect-video rounded-2xl overflow-hidden video-frame-glow bg-black">
+                                <iframe id="tutorial-modal-iframe" class="w-full h-full" title="Exercise video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+                            </div>
+                            <p id="tutorial-modal-source" class="text-xs text-[#71767c] mt-3"></p>
+                        </div>
                     </div>
-                    <p class="text-gray-500 text-lg">No activities logged yet. Start by logging a workout or meal above!</p>
+                    <div class="rounded-2xl bg-[#141a20] border border-[#43484e]/25 p-5">
+                        <p class="motion-chip text-[#a7abb2] mb-2">Coach note</p>
+                        <p id="tutorial-modal-tip" class="text-sm text-[#e7ebf3] leading-relaxed">—</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 habit-header-glass border-t border-[#43484e]/30 py-2 px-2 flex overflow-x-auto no-scrollbar gap-1 justify-start safe-area-pb items-stretch" aria-label="Mobile">
+        <button type="button" onclick="showTab('home')" id="mob-home-tab" class="mob-nav flex-shrink-0 w-[4.25rem] flex flex-col items-center py-2 text-[9px] text-[#a7abb2]">
+            <i class="fas fa-home text-base mb-0.5"></i><span>Home</span>
+        </button>
+        <button type="button" onclick="showTab('exercise')" id="mob-exercise-tab" class="mob-nav flex-shrink-0 w-[4.25rem] flex flex-col items-center py-2 text-[9px] text-[#a7abb2]">
+            <i class="fas fa-dumbbell text-base mb-0.5"></i><span>Train</span>
+        </button>
+        <button type="button" onclick="showTab('diet')" id="mob-diet-tab" class="mob-nav flex-shrink-0 w-[4.25rem] flex flex-col items-center py-2 text-[9px] text-[#a7abb2]">
+            <i class="fas fa-utensils text-base mb-0.5"></i><span>Diet</span>
+        </button>
+        <button type="button" onclick="showTab('tutorials')" id="mob-tutorials-tab" class="mob-nav flex-shrink-0 w-[4.25rem] flex flex-col items-center py-2 text-[9px] text-[#a7abb2]">
+            <i class="fas fa-play-circle text-base mb-0.5"></i><span>Lab</span>
+        </button>
+        <button type="button" onclick="showTab('ai')" id="mob-ai-tab" class="mob-nav flex-shrink-0 w-[4.25rem] flex flex-col items-center py-2 text-[9px] text-[#a7abb2]">
+            <i class="fas fa-brain text-base mb-0.5"></i><span>AI</span>
+        </button>
+        <button type="button" onclick="showTab('settings')" id="mob-settings-tab" class="mob-nav flex-shrink-0 w-[4.25rem] flex flex-col items-center py-2 text-[9px] text-[#a7abb2]">
+            <i class="fas fa-cog text-base mb-0.5"></i><span>Setup</span>
+        </button>
+    </nav>
+    </div>
 
     <script>
-        // Set today's date as default for both forms
+        const TOKEN_KEY = 'habitualJwt';
+        const DISPLAY_KEY = 'habitualDisplayName';
+        const EMAIL_KEY = 'habitualEmail';
+
+        let habitMotionApi = null;
+        let habitMotionPromise = null;
+        function habitReducedMotion() {
+            try {
+                return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            } catch (e) {
+                return false;
+            }
+        }
+        function loadHabitMotion() {
+            if (habitReducedMotion()) return Promise.resolve(null);
+            if (habitMotionApi) return Promise.resolve(habitMotionApi);
+            if (habitMotionPromise) return habitMotionPromise;
+            habitMotionPromise = import('https://esm.sh/motion@11.11.17')
+                .then(function (m) {
+                    habitMotionApi = { animate: m.animate, stagger: m.stagger };
+                    return habitMotionApi;
+                })
+                .catch(function () {
+                    return null;
+                });
+            return habitMotionPromise;
+        }
+
+        function authHeaders(extra) {
+            const h = Object.assign({ 'Content-Type': 'application/json' }, extra || {});
+            const t = localStorage.getItem(TOKEN_KEY);
+            if (t) h['Authorization'] = 'Bearer ' + t;
+            return h;
+        }
+
+        async function authFetch(url, opts) {
+            opts = opts || {};
+            const merged = Object.assign({}, opts);
+            merged.headers = Object.assign({}, authHeaders(), opts.headers || {});
+            const res = await fetch(url, merged);
+            if (res.status === 401 && localStorage.getItem(TOKEN_KEY)) {
+                logout();
+                showErrorMessage('Session expired. Sign in again.');
+            }
+            return res;
+        }
+
+        function showApp() {
+            document.getElementById('auth-view').classList.add('hidden');
+            document.getElementById('app-shell').classList.remove('hidden');
+            const dn = localStorage.getItem(DISPLAY_KEY);
+            const em = localStorage.getItem(EMAIL_KEY);
+            const nameEl = document.getElementById('dash-display-name');
+            const emailEl = document.getElementById('dash-email');
+            if (nameEl) nameEl.textContent = dn || 'Pilot';
+            if (emailEl) emailEl.textContent = em || '';
+            loadDashboard();
+            showTab('home');
+        }
+
+        function logout() {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem(DISPLAY_KEY);
+            localStorage.removeItem(EMAIL_KEY);
+            document.getElementById('app-shell').classList.add('hidden');
+            document.getElementById('auth-view').classList.remove('hidden');
+        }
+
+        document.getElementById('auth-tab-login').addEventListener('click', function () {
+            document.getElementById('auth-login-panel').classList.remove('hidden');
+            document.getElementById('auth-register-panel').classList.add('hidden');
+            this.className = 'flex-1 py-2.5 text-sm font-semibold rounded-md bg-[#00f0ff]/15 text-[#00f0ff]';
+            document.getElementById('auth-tab-register').className = 'flex-1 py-2.5 text-sm font-semibold rounded-md text-[#b9cacb] hover:text-[#e0e2e9]';
+        });
+        document.getElementById('auth-tab-register').addEventListener('click', function () {
+            document.getElementById('auth-login-panel').classList.add('hidden');
+            document.getElementById('auth-register-panel').classList.remove('hidden');
+            this.className = 'flex-1 py-2.5 text-sm font-semibold rounded-md bg-[#00f0ff]/15 text-[#00f0ff]';
+            document.getElementById('auth-tab-login').className = 'flex-1 py-2.5 text-sm font-semibold rounded-md text-[#b9cacb] hover:text-[#e0e2e9]';
+        });
+
+        document.getElementById('auth-login-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const err = document.getElementById('auth-error');
+            err.classList.add('hidden');
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    err.textContent = data.error || 'Login failed';
+                    err.classList.remove('hidden');
+                    return;
+                }
+                localStorage.setItem(TOKEN_KEY, data.token);
+                localStorage.setItem(DISPLAY_KEY, data.displayName || '');
+                localStorage.setItem(EMAIL_KEY, data.email || '');
+                showApp();
+            } catch (ex) {
+                err.textContent = 'Network error';
+                err.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('auth-register-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const err = document.getElementById('auth-error');
+            err.classList.add('hidden');
+            const displayName = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            if (password !== document.getElementById('reg-password2').value) {
+                err.textContent = 'Passwords do not match';
+                err.classList.remove('hidden');
+                return;
+            }
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, displayName })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    err.textContent = data.error || 'Registration failed';
+                    err.classList.remove('hidden');
+                    return;
+                }
+                localStorage.setItem(TOKEN_KEY, data.token);
+                localStorage.setItem(DISPLAY_KEY, data.displayName || '');
+                localStorage.setItem(EMAIL_KEY, data.email || '');
+                showApp();
+            } catch (ex) {
+                err.textContent = 'Network error';
+                err.classList.remove('hidden');
+            }
+        });
+
         document.getElementById('workout-date').valueAsDate = new Date();
         document.getElementById('meal-date').valueAsDate = new Date();
+        const mealDateEl = document.getElementById('meal-date');
+        if (mealDateEl) mealDateEl.addEventListener('change', loadMealsForSelectedDay);
+        updateMealSubmitUi();
 
-        // Tab switching functionality with animations
+        const TAB_IDS = ['home', 'exercise', 'diet', 'tutorials', 'ai', 'settings'];
+
+        let motionLabVideos = [];
+        let motionLabLoadError = null;
+        let labChannelFilterId = '';
+        let motionLabSearchQuery = '';
+        let motionLabSearchTimer = null;
+        let labLastSearchSmart = false;
+
+        function labAuthHeaders() {
+            var h = {};
+            var tok = localStorage.getItem(TOKEN_KEY);
+            if (tok) h['Authorization'] = 'Bearer ' + tok;
+            return h;
+        }
+
+        async function refreshLabChannelBar() {
+            var bar = document.getElementById('lab-channel-bar');
+            if (!bar || !localStorage.getItem(TOKEN_KEY)) return;
+            try {
+                var res = await fetch('/api/lab/channels', { headers: labAuthHeaders() });
+                if (!res.ok) return;
+                var data = await res.json();
+                var ch = data.channels || [];
+                bar.innerHTML = '';
+                var allBtn = document.createElement('button');
+                allBtn.type = 'button';
+                allBtn.setAttribute('data-channel', 'all');
+                allBtn.className = 'lab-channel-btn tutorial-filter-active px-3 py-1.5 rounded-full text-[10px] font-semibold border border-[#43484e]/40 text-[#a7abb2] hover:border-[#00f0ff]/40 transition';
+                allBtn.textContent = 'All channels';
+                bar.appendChild(allBtn);
+                ch.forEach(function (c) {
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.setAttribute('data-channel', c.channelId);
+                    b.className = 'lab-channel-btn px-3 py-1.5 rounded-full text-[10px] font-semibold border border-[#43484e]/40 text-[#a7abb2] hover:border-[#00f0ff]/40 transition';
+                    b.textContent = c.channelTitle.length > 28 ? c.channelTitle.slice(0, 26) + '…' : c.channelTitle;
+                    bar.appendChild(b);
+                });
+                wireLabChannelButtons();
+                var active = labChannelFilterId || 'all';
+                document.querySelectorAll('.lab-channel-btn').forEach(function (btn) {
+                    var on = (btn.getAttribute('data-channel') || 'all') === active;
+                    btn.classList.toggle('tutorial-filter-active', on);
+                });
+            } catch (e) { /* ignore */ }
+        }
+
+        function wireLabChannelButtons() {
+            document.querySelectorAll('.lab-channel-btn').forEach(function (btn) {
+                btn.onclick = function () {
+                    setLabChannelFilter(btn.getAttribute('data-channel') || 'all');
+                };
+            });
+        }
+
+        function setLabChannelFilter(channelKey) {
+            labChannelFilterId = !channelKey || channelKey === 'all' ? '' : channelKey;
+            document.querySelectorAll('.lab-channel-btn').forEach(function (btn) {
+                var cid = btn.getAttribute('data-channel') || 'all';
+                var on = (labChannelFilterId === '' && cid === 'all') || (labChannelFilterId !== '' && cid === labChannelFilterId);
+                btn.classList.toggle('tutorial-filter-active', on);
+            });
+            fetchMotionLabSearch();
+        }
+
+        async function fetchMotionLabSearch() {
+            var grid = document.getElementById('tutorial-grid');
+            var cntEl = document.getElementById('motion-lab-count');
+            var badge = document.getElementById('motion-lab-search-badge');
+            if (!localStorage.getItem(TOKEN_KEY)) {
+                motionLabVideos = [];
+                motionLabLoadError = 'not_logged_in';
+                if (badge) badge.classList.add('hidden');
+                renderMotionLab();
+                return;
+            }
+            motionLabLoadError = null;
+            var q = (motionLabSearchQuery || '').trim();
+            var url = '/api/lab/search?limit=60';
+            if (q) url += '&q=' + encodeURIComponent(q);
+            if (labChannelFilterId) url += '&channelId=' + encodeURIComponent(labChannelFilterId);
+            try {
+                var res = await fetch(url, { headers: labAuthHeaders() });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var data = await res.json();
+                motionLabVideos = Array.isArray(data.videos) ? data.videos : [];
+                labLastSearchSmart = !!data.smart;
+                if (badge) {
+                    if (q.length >= 2 && labLastSearchSmart) badge.classList.remove('hidden');
+                    else badge.classList.add('hidden');
+                }
+            } catch (e) {
+                motionLabLoadError = e.message || String(e);
+                motionLabVideos = [];
+                if (badge) badge.classList.add('hidden');
+            }
+            renderMotionLab();
+        }
+
+        function onMotionLabSearchInput() {
+            var el = document.getElementById('motion-lab-search');
+            motionLabSearchQuery = el ? el.value : '';
+            if (motionLabSearchTimer) clearTimeout(motionLabSearchTimer);
+            motionLabSearchTimer = setTimeout(function () { fetchMotionLabSearch(); }, 350);
+        }
+
+        async function syncMotionLabLibrary() {
+            if (!localStorage.getItem(TOKEN_KEY)) {
+                alert('Log in to sync the library.');
+                return;
+            }
+            var btn = document.getElementById('lab-sync-btn');
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Syncing…'; }
+            try {
+                var res = await fetch('/api/lab/sync', { method: 'POST', headers: labAuthHeaders() });
+                var data = await res.json().catch(function () { return {}; });
+                if (!res.ok) {
+                    alert(data.error || 'Sync failed. Set YOUTUBE_API_KEY on the server.');
+                } else {
+                    await refreshLabChannelBar();
+                    await fetchMotionLabSearch();
+                }
+            } catch (e) {
+                alert('Sync failed: ' + (e.message || e));
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-cloud-download-alt mr-1"></i>Sync library'; }
+            }
+        }
+
+        function motionLabYtThumbFallback(el) {
+            var id = el.getAttribute('data-ytid');
+            if (!id) return;
+            var order = ['mqdefault', 'sddefault', 'default'];
+            var i = parseInt(el.getAttribute('data-thumb-try') || '0', 10);
+            if (i >= order.length) return;
+            el.setAttribute('data-thumb-try', String(i + 1));
+            el.src = 'https://i.ytimg.com/vi/' + id + '/' + order[i] + '.jpg';
+        }
+
+        function renderMotionLab() {
+            const grid = document.getElementById('tutorial-grid');
+            const cntEl = document.getElementById('motion-lab-count');
+            if (!grid) return;
+            if (motionLabLoadError === 'not_logged_in') {
+                grid.innerHTML = '<div class="col-span-full text-center py-16 px-4 rounded-2xl border border-[#43484e]/30 bg-[#141a20] text-[#a7abb2]"><p class="text-[#00f0ff] font-semibold mb-2">Sign in to use Motion Lab</p><p class="text-sm">Search and sync require an account session.</p></div>';
+                if (cntEl) cntEl.textContent = '—';
+                return;
+            }
+            if (motionLabLoadError) {
+                grid.innerHTML = '<div class="col-span-full text-center py-16 px-4 rounded-2xl border border-red-500/30 bg-[#141a20] text-[#a7abb2]"><p class="text-red-400 font-semibold mb-2">Search failed</p><p class="text-sm">' + escapeHtml(motionLabLoadError) + '</p></div>';
+                if (cntEl) cntEl.textContent = '—';
+                return;
+            }
+            const list = motionLabVideos;
+            if (cntEl) cntEl.textContent = list.length + ' shown';
+            if (list.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-16 px-4 rounded-2xl border border-[#43484e]/30 bg-[#141a20] text-[#a7abb2]"><p class="mb-2"><i class="fas fa-database text-3xl text-[#00f0ff]/40"></i></p><p class="text-[#e7ebf3] font-semibold mb-2">No videos indexed yet</p><p class="text-sm max-w-md mx-auto">Set <code class="text-[#00f0ff]">YOUTUBE_API_KEY</code> on the server, then tap <strong class="text-[#00f0ff]">Sync library</strong>. Configure OpenAI in Settings for smart (embedding) search.</p></div>';
+                if (cntEl) cntEl.textContent = '0 shown';
+                return;
+            }
+            grid.innerHTML = list.map(function (ex) {
+                var ytId = ex.videoId || '';
+                var poster = ex.thumbUrl || (ytId ? 'https://i.ytimg.com/vi/' + ytId + '/hqdefault.jpg' : '');
+                var ch = ex.channelTitle || 'Channel';
+                return '<article class="motion-lab-card rounded-3xl overflow-hidden cursor-pointer group" onclick="openLabVideoModal(\'' + ytId + '\')">' +
+                    '<div class="relative aspect-video bg-[#0e1419]">' +
+                    '<img src="' + poster + '" alt="" data-ytid="' + ytId + '" data-thumb-try="0" class="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition" onerror="motionLabYtThumbFallback(this)"/>' +
+                    '<div class="absolute inset-0 bg-gradient-to-t from-[#0a0f14] via-transparent to-transparent opacity-80"></div>' +
+                    '<div class="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">' +
+                    '<span class="text-[10px] uppercase tracking-wider text-[#00f0ff] font-semibold line-clamp-1">' + escapeHtml(ch) + '</span>' +
+                    '<span class="w-10 h-10 rounded-full bg-[#00f0ff]/20 border border-[#00f0ff]/40 flex items-center justify-center text-[#00f0ff] group-hover:scale-110 transition"><i class="fas fa-play text-sm"></i></span>' +
+                    '</div></div>' +
+                    '<div class="p-5">' +
+                    '<h3 class="font-display font-bold text-lg text-[#e7ebf3] group-hover:text-[#00f0ff] transition line-clamp-2">' + escapeHtml(ex.title || '') + '</h3>' +
+                    '<p class="text-xs text-[#71767c] mt-2 line-clamp-2">' + escapeHtml(ex.snippet || '') + '</p>' +
+                    '</div></article>';
+            }).join('');
+            loadHabitMotion().then(function (M) {
+                if (!M || !M.animate) return;
+                var cards = grid.querySelectorAll('article.motion-lab-card');
+                if (!cards.length) return;
+                try {
+                    var o = { duration: 0.36, easing: [0.22, 1, 0.36, 1] };
+                    if (M.stagger) o.delay = M.stagger(0.028, { startDelay: 0.02 });
+                    M.animate(cards, { opacity: [0, 1], y: [14, 0] }, o);
+                } catch (e) {
+                    for (var i = 0; i < cards.length; i++) {
+                        M.animate(cards[i], { opacity: [0, 1], y: [14, 0] }, { duration: 0.32, delay: i * 0.028 });
+                    }
+                }
+            });
+        }
+
+        function openLabVideoModal(videoId) {
+            if (!videoId) return;
+            var ex = motionLabVideos.find(function (x) { return x.videoId === videoId; });
+            var modal = document.getElementById('tutorial-modal');
+            var iframe = document.getElementById('tutorial-modal-iframe');
+            var titleEl = document.getElementById('tutorial-modal-title');
+            var tipEl = document.getElementById('tutorial-modal-tip');
+            var sourceEl = document.getElementById('tutorial-modal-source');
+            var panel = document.getElementById('tutorial-modal-panel');
+            var backdrop = document.getElementById('tutorial-modal-backdrop');
+            titleEl.textContent = ex && ex.title ? ex.title : 'Video';
+            tipEl.textContent = ex && ex.snippet ? ex.snippet : '';
+            if (sourceEl) sourceEl.textContent = ex && ex.channelTitle ? ex.channelTitle : 'YouTube';
+            if (iframe) iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?rel=0';
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            loadHabitMotion().then(function (M) {
+                if (!M || !M.animate || !panel) return;
+                try {
+                    if (backdrop) M.animate(backdrop, { opacity: [0, 1] }, { duration: 0.28 });
+                    M.animate(panel, { opacity: [0, 1], scale: [0.92, 1], y: [28, 0] }, { duration: 0.4, easing: [0.22, 1, 0.36, 1] });
+                } catch (e) { /* no-op */ }
+            });
+        }
+
+        async function closeTutorialModal() {
+            var modal = document.getElementById('tutorial-modal');
+            var iframe = document.getElementById('tutorial-modal-iframe');
+            var panel = document.getElementById('tutorial-modal-panel');
+            var backdrop = document.getElementById('tutorial-modal-backdrop');
+            var M = await loadHabitMotion();
+            if (M && M.animate && panel && !modal.classList.contains('hidden')) {
+                try {
+                    var p1 = M.animate(panel, { opacity: [1, 0], scale: [1, 0.96], y: [0, 20] }, { duration: 0.22, easing: [0.4, 0, 1, 1] }).finished;
+                    var p2 = backdrop ? M.animate(backdrop, { opacity: [1, 0] }, { duration: 0.18 }).finished : Promise.resolve();
+                    await Promise.all([p1, p2]);
+                } catch (e) { /* no-op */ }
+            }
+            if (iframe) iframe.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            if (panel) { panel.style.opacity = ''; panel.style.transform = ''; }
+            if (backdrop) backdrop.style.opacity = '';
+        }
+
+        async function initMotionLabPanel() {
+            wireLabChannelButtons();
+            if (!localStorage.getItem(TOKEN_KEY)) {
+                motionLabLoadError = 'not_logged_in';
+                renderMotionLab();
+                return;
+            }
+            await refreshLabChannelBar();
+            await fetchMotionLabSearch();
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeTutorialModal();
+        });
+
+        function setNavActive(tabName) {
+            const map = {
+                home: ['home-tab', 'mob-home-tab'],
+                exercise: ['exercise-tab', 'mob-exercise-tab'],
+                diet: ['diet-tab', 'mob-diet-tab'],
+                tutorials: ['tutorials-tab', 'mob-tutorials-tab'],
+                ai: ['ai-tab', 'mob-ai-tab'],
+                settings: ['settings-tab', 'mob-settings-tab']
+            };
+            TAB_IDS.forEach(t => {
+                (map[t] || []).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    el.classList.remove('habit-nav-active', 'text-[#3adffa]');
+                    el.classList.add('text-[#a7abb2]');
+                });
+            });
+            (map[tabName] || []).forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.classList.add('habit-nav-active', 'text-[#3adffa]');
+                el.classList.remove('text-[#a7abb2]');
+            });
+        }
+
         function showTab(tabName) {
-            // Hide all tab contents with fade out
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
                 content.classList.remove('fade-in');
             });
 
-            // Remove active state from all tabs
-            document.querySelectorAll('#exercise-tab, #diet-tab, #ai-tab, #settings-tab').forEach(tab => {
-                tab.classList.remove('text-white', 'bg-white/30', 'border-white/30');
-                tab.classList.add('text-white/80', 'hover:bg-white/20', 'border-white/20');
-            });
-
-            // Show selected tab content with animation
             setTimeout(() => {
-                if (tabName === 'exercise') {
-                    document.getElementById('exercise-form').classList.remove('hidden');
-                    document.getElementById('exercise-form').classList.add('fade-in');
-                    document.getElementById('exercise-tab').classList.add('text-white', 'bg-white/30', 'border-white/30');
-                    document.getElementById('exercise-tab').classList.remove('text-white/80', 'hover:bg-white/20', 'border-white/20');
-                } else if (tabName === 'diet') {
-                    document.getElementById('diet-form').classList.remove('hidden');
-                    document.getElementById('diet-form').classList.add('fade-in');
-                    document.getElementById('diet-tab').classList.add('text-white', 'bg-white/30', 'border-white/30');
-                    document.getElementById('diet-tab').classList.remove('text-white/80', 'hover:bg-white/20', 'border-white/20');
-                } else if (tabName === 'ai') {
-                    document.getElementById('ai-form').classList.remove('hidden');
-                    document.getElementById('ai-form').classList.add('fade-in');
-                    document.getElementById('ai-tab').classList.add('text-white', 'bg-white/30', 'border-white/30');
-                    document.getElementById('ai-tab').classList.remove('text-white/80', 'hover:bg-white/20', 'border-white/20');
-                    checkAIStatus();
-                } else if (tabName === 'settings') {
-                    document.getElementById('settings-form').classList.remove('hidden');
-                    document.getElementById('settings-form').classList.add('fade-in');
-                    document.getElementById('settings-tab').classList.add('text-white', 'bg-white/30', 'border-white/30');
-                    document.getElementById('settings-tab').classList.remove('text-white/80', 'hover:bg-white/20', 'border-white/20');
-                    checkAIStatus();
+                const panel = {
+                    home: 'home-dashboard',
+                    exercise: 'exercise-form',
+                    diet: 'diet-form',
+                    tutorials: 'tutorials-panel',
+                    ai: 'ai-form',
+                    settings: 'settings-form'
+                }[tabName];
+                if (panel) {
+                    const el = document.getElementById(panel);
+                    el.classList.remove('hidden');
+                    loadHabitMotion().then(function (M) {
+                        if (M && M.animate) {
+                            try {
+                                M.animate(el, { opacity: [0, 1], y: [14, 0], filter: ['blur(8px)', 'blur(0px)'] }, {
+                                    duration: 0.42,
+                                    easing: [0.22, 1, 0.36, 1]
+                                });
+                            } catch (e) {
+                                el.classList.add('fade-in');
+                            }
+                        } else {
+                            el.classList.add('fade-in');
+                        }
+                    });
                 }
-            }, 100);
+                setNavActive(tabName);
+                if (tabName === 'ai' || tabName === 'settings') checkAIStatus();
+                if (tabName === 'home') loadDashboard();
+                if (tabName === 'diet') loadMealsForSelectedDay();
+                if (tabName === 'tutorials') initMotionLabPanel();
+            }, 50);
         }
 
-        // API Key validation
+        async function loadDashboard() {
+            const dateEl = document.getElementById('dash-date');
+            if (dateEl) {
+                dateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            }
+            const dn = localStorage.getItem(DISPLAY_KEY);
+            const em = localStorage.getItem(EMAIL_KEY);
+            const nameEl = document.getElementById('dash-display-name');
+            const emailEl = document.getElementById('dash-email');
+            if (nameEl && dn) nameEl.textContent = dn;
+            if (emailEl && em) emailEl.textContent = em;
+            const box = document.getElementById('dashboard-recent-list');
+            try {
+                const res = await authFetch('/api/dashboard/summary');
+                if (!res.ok) {
+                    if (res.status === 401) return;
+                    throw new Error('bad');
+                }
+                const d = await res.json();
+                document.getElementById('dash-workouts').textContent = d.workoutsThisWeek;
+                document.getElementById('dash-volume').textContent = d.totalVolumeLb.toLocaleString();
+                document.getElementById('dash-calories').textContent = d.avgCaloriesPerDayLast7 > 0 ? d.avgCaloriesPerDayLast7 : '—';
+                document.getElementById('dash-ai').textContent = d.aiConfigured ? 'Connected' : 'Not connected';
+                document.getElementById('dash-ai').className = 'text-lg font-semibold mt-1 ' + (d.aiConfigured ? 'text-[#3adffa]' : 'text-[#a7abb2]');
+                if (!d.recent || d.recent.length === 0) {
+                    box.innerHTML = '<div class="text-center py-10 text-[#a7abb2]"><i class="fas fa-clipboard-list text-4xl mb-3 opacity-40"></i><p>No activity yet. Log a workout or meal.</p></div>';
+                    return;
+                }
+                box.innerHTML = d.recent.map(r => {
+                    const icon = r.type === 'workout' ? 'fa-dumbbell' : 'fa-utensils';
+                    const col = r.type === 'workout' ? 'text-[#3adffa]' : 'text-[#7aacff]';
+                    return `<div class="flex items-center justify-between p-4 rounded-2xl bg-[#141a20] border border-[#43484e]/25 card-hover">
+                        <div class="flex items-center min-w-0 gap-3">
+                            <div class="p-3 rounded-xl bg-[#0e1419] ${col}"><i class="fas ${icon}"></i></div>
+                            <div class="min-w-0">
+                                <div class="font-semibold text-[#e7ebf3] truncate">${escapeHtml(r.title)}</div>
+                                <div class="text-sm text-[#a7abb2]">${escapeHtml(r.subtitle)} · ${r.date}</div>
+                            </div>
+                        </div>
+                        <div class="text-right text-sm font-medium text-[#3adffa] shrink-0">${escapeHtml(r.meta)}</div>
+                    </div>`;
+                }).join('');
+                loadHabitMotion().then(function (M) {
+                    if (!M || !M.animate) return;
+                    var rows = box.querySelectorAll(':scope > div');
+                    if (!rows.length) return;
+                    try {
+                        var opts = { duration: 0.34, easing: [0.22, 1, 0.36, 1] };
+                        if (M.stagger) opts.delay = M.stagger(0.045, { startDelay: 0.05 });
+                        M.animate(rows, { opacity: [0, 1], y: [10, 0] }, opts);
+                    } catch (e) {
+                        for (var i = 0; i < rows.length; i++) {
+                            M.animate(rows[i], { opacity: [0, 1], y: [10, 0] }, { duration: 0.32, delay: i * 0.05 });
+                        }
+                    }
+                });
+            } catch (e) {
+                box.innerHTML = '<div class="text-center py-8 text-[#a7abb2]">Could not load dashboard.</div>';
+            }
+        }
+
+        function escapeHtml(s) {
+            if (!s) return '';
+            const d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
         function validateApiKey(input) {
             const apiKey = input.value.trim();
-            const isValid = apiKey.startsWith('sk-') && apiKey.length >= 20 && apiKey.length <= 100;
+            const isValid = apiKey.startsWith('sk-') && apiKey.length >= 20 && apiKey.length <= 512;
             
             if (apiKey.length > 0) {
                 if (isValid) {
@@ -521,8 +1359,7 @@
                 input.classList.add('border-gray-200');
             }
         }
-        
-        // AI Configuration with enhanced security
+
         async function configureAI() {
             const apiKeyInput = document.getElementById('openai-api-key');
             const apiKey = apiKeyInput.value.trim();
@@ -531,37 +1368,32 @@
                 showErrorMessage('Please enter your OpenAI API key');
                 return;
             }
-            
-            // Client-side validation
+
             if (!apiKey.startsWith('sk-')) {
                 showErrorMessage('API key must start with "sk-"');
                 return;
             }
             
-            if (apiKey.length < 20 || apiKey.length > 100) {
-                showErrorMessage('API key must be between 20 and 100 characters');
+            if (apiKey.length < 20 || apiKey.length > 512) {
+                showErrorMessage('API key must be between 20 and 512 characters (project keys sk-proj- are long)');
                 return;
             }
-            
-            // Check for suspicious patterns
+
             if (apiKey.includes('<script') || apiKey.includes('javascript:') || apiKey.includes('onload=')) {
                 showErrorMessage('Invalid API key format detected');
                 return;
             }
 
             try {
-                const response = await fetch('/api/ai/configure', {
+                const response = await authFetch('/api/ai/configure', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify({ apiKey: apiKey })
                 });
 
                 if (response.ok) {
                     showSuccessMessage('AI configured successfully!');
                     checkAIStatus();
-                    // Clear the API key field for security
+                    loadDashboard();
                     apiKeyInput.value = '';
                     apiKeyInput.classList.remove('border-red-500', 'border-green-500');
                     apiKeyInput.classList.add('border-gray-200');
@@ -574,10 +1406,9 @@
             }
         }
 
-        // Check AI Status
         async function checkAIStatus() {
             try {
-                const response = await fetch('/api/ai/status');
+                const response = await authFetch('/api/ai/status');
                 if (response.ok) {
                     const data = await response.json();
                     updateAIStatus(data.configured);
@@ -588,36 +1419,29 @@
         }
 
         function updateAIStatus(configured) {
-            const statusElements = document.querySelectorAll('#ai-status, #settings-ai-status');
-            statusElements.forEach(element => {
+            document.querySelectorAll('#ai-status, #settings-ai-status').forEach(element => {
                 if (element.id === 'ai-status') {
-                    element.textContent = configured ? 'Configured' : 'Not Configured';
-                    element.className = configured ? 
-                        'px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800' :
-                        'px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
+                    element.textContent = configured ? 'Configured' : 'Not configured';
+                    element.className = configured
+                        ? 'px-4 py-2 rounded-full text-sm font-semibold bg-[#141a20] text-[#3adffa] border border-[#3adffa]/35'
+                        : 'px-4 py-2 rounded-full text-sm font-semibold bg-[#141a20] text-[#a7abb2] border border-[#43484e]/40';
                 } else {
-                    element.textContent = configured ? 
-                        '✅ AI is configured and ready to use' : 
-                        '❌ AI is not configured. Please add your OpenAI API key above.';
+                    element.textContent = configured
+                        ? 'AI is configured and ready.'
+                        : 'AI is not configured. Add your OpenAI API key above.';
+                    element.className = 'text-sm text-[#a7abb2]';
                 }
             });
         }
 
-        // Get workout recommendations from AI
         async function getWorkoutRecommendations() {
-            const userId = document.getElementById('ai-workout-userId').value;
-            if (!userId) {
-                showErrorMessage('Please enter a User ID');
-                return;
-            }
-
             const button = document.querySelector('button[onclick="getWorkoutRecommendations()"]');
             const originalText = button.innerHTML;
             button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Getting Recommendations...';
             button.disabled = true;
 
             try {
-                const response = await fetch(`/api/ai/workout-recommendations/${userId}`);
+                const response = await authFetch('/api/ai/workout-recommendations');
                 if (response.ok) {
                     const data = await response.json();
                     showAIOutput('workout-recommendations-output', data.recommendations);
@@ -633,21 +1457,14 @@
             }
         }
 
-        // Get nutrition advice from AI
         async function getNutritionAdvice() {
-            const userId = document.getElementById('ai-nutrition-userId').value;
-            if (!userId) {
-                showErrorMessage('Please enter a User ID');
-                return;
-            }
-
             const button = document.querySelector('button[onclick="getNutritionAdvice()"]');
             const originalText = button.innerHTML;
             button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Getting Advice...';
             button.disabled = true;
 
             try {
-                const response = await fetch(`/api/ai/nutrition-advice/${userId}`);
+                const response = await authFetch('/api/ai/nutrition-advice');
                 if (response.ok) {
                     const data = await response.json();
                     showAIOutput('nutrition-advice-output', data.advice);
@@ -663,21 +1480,14 @@
             }
         }
 
-        // Get progress analysis from AI
         async function getProgressAnalysis() {
-            const userId = document.getElementById('ai-progress-userId').value;
-            if (!userId) {
-                showErrorMessage('Please enter a User ID');
-                return;
-            }
-
             const button = document.querySelector('button[onclick="getProgressAnalysis()"]');
             const originalText = button.innerHTML;
             button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing Progress...';
             button.disabled = true;
 
             try {
-                const response = await fetch(`/api/ai/progress-analysis/${userId}`);
+                const response = await authFetch('/api/ai/progress-analysis');
                 if (response.ok) {
                     const data = await response.json();
                     showAIOutput('progress-analysis-output', data.analysis);
@@ -693,52 +1503,44 @@
             }
         }
 
-        // Format and display AI output with proper styling
         function showAIOutput(outputId, content) {
             const outputElement = document.getElementById(outputId);
             const contentElement = outputElement.querySelector('div');
-            
-            // Parse the AI response and format it nicely
+
             let formattedContent = content;
-            
-            // Check if the content contains numbered lists (like "1.", "2.", etc.)
+
             if (content.match(/\d+\./)) {
-                // Split by numbered items and format as HTML
                 formattedContent = content
-                    .split(/(?=\d+\.)/) // Split at numbered items
-                    .filter(item => item.trim()) // Remove empty items
+                    .split(/(?=\d+\.)/)
+                    .filter(item => item.trim())
                     .map(item => {
                         const trimmed = item.trim();
                         if (trimmed.match(/^\d+\./)) {
-                            // Convert numbered items to bullet points with better formatting
                             const text = trimmed.replace(/^\d+\.\s*/, '');
-                            // Split on colon if present to separate title from content
                             const parts = text.split(':');
                             if (parts.length > 1) {
                                 const title = parts[0].trim();
                                 const content = parts.slice(1).join(':').trim();
                                 return `<li class="mb-3">
-                                    <span class="font-semibold text-blue-600">${title}:</span>
-                                    <span class="text-gray-700">${content}</span>
+                                    <span class="font-semibold text-[#3adffa]">${title}:</span>
+                                    <span class="text-[#a7abb2]">${content}</span>
                                 </li>`;
                             } else {
-                                return `<li class="mb-3 text-gray-700">${text}</li>`;
+                                return `<li class="mb-3 text-[#a7abb2]">${text}</li>`;
                             }
                         }
                         return trimmed;
                     })
                     .join('');
-                
-                // Wrap in ul tags for proper bullet formatting with enhanced styling
+
                 formattedContent = `<ul class="list-none space-y-1 text-sm">
                     ${formattedContent}
                 </ul>`;
             } else {
-                // For non-numbered content, just format as paragraphs
                 formattedContent = content
                     .split('\n')
                     .filter(line => line.trim())
-                    .map(line => `<p class="mb-2 text-sm text-gray-700">${line.trim()}</p>`)
+                    .map(line => `<p class="mb-2 text-sm text-[#a7abb2]">${line.trim()}</p>`)
                     .join('');
             }
             
@@ -746,7 +1548,6 @@
             outputElement.classList.remove('hidden');
         }
 
-        // Submit workout form
         async function submitWorkout() {
             const form = document.getElementById('workout-form');
             if (!form.checkValidity()) {
@@ -756,7 +1557,6 @@
 
             const formData = new FormData(form);
             const workoutData = {
-                userId: parseInt(formData.get('userId')),
                 date: formData.get('date'),
                 exerciseName: formData.get('exerciseName'),
                 sets: parseInt(formData.get('sets')),
@@ -765,19 +1565,15 @@
             };
 
             try {
-                const response = await fetch('/api/workouts/log', {
+                const response = await authFetch('/api/workouts/log', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify(workoutData)
                 });
 
                 if (response.ok) {
-                    const workout = await response.json();
-                    addActivityToList('workout', workout);
                     form.reset();
                     document.getElementById('workout-date').valueAsDate = new Date();
+                    loadDashboard();
                     showSuccessMessage('Workout logged successfully!');
                 } else {
                     const errorData = await response.json();
@@ -788,7 +1584,207 @@
             }
         }
 
-        // Submit meal form
+        function setMealPresetTime(hhmm) {
+            const el = document.getElementById('meal-time');
+            if (el) el.value = hhmm;
+        }
+
+        function normalizeTimeForInput(s) {
+            if (s == null || s === '') return '';
+            const m = String(s).trim().match(/^(\d{1,2}):(\d{2})/);
+            if (!m) return '';
+            let h = parseInt(m[1], 10);
+            let min = parseInt(m[2], 10);
+            if (Number.isNaN(h) || Number.isNaN(min)) return '';
+            h = Math.min(23, Math.max(0, h));
+            min = Math.min(59, Math.max(0, min));
+            return String(h).padStart(2, '0') + ':' + String(min).padStart(2, '0');
+        }
+
+        async function fillMealFromAI() {
+            const nameEl = document.getElementById('meal-name');
+            const hint = document.getElementById('meal-slot-hint');
+            const btn = document.getElementById('meal-fill-ai-btn');
+            const name = nameEl && nameEl.value.trim();
+            if (!name) {
+                showErrorMessage('Enter a meal name first.');
+                return;
+            }
+            if (hint) { hint.classList.add('hidden'); hint.textContent = ''; }
+            if (btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
+            try {
+                const res = await authFetch('/api/ai/meal-estimate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mealName: name })
+                });
+                const data = await res.json();
+                if (!data.ai) {
+                    showErrorMessage(data.message || data.error || 'Could not estimate nutrition. Check AI in Settings.');
+                    return;
+                }
+                document.getElementById('meal-calories').value = data.calories;
+                document.getElementById('meal-protein').value = data.protein;
+                document.getElementById('meal-carbs').value = data.carbs;
+                document.getElementById('meal-fats').value = data.fats;
+                const t = normalizeTimeForInput(data.mealTime);
+                if (t) setMealPresetTime(t);
+                if (hint && data.mealSlot) {
+                    hint.textContent = 'AI suggests: ' + data.mealSlot;
+                    hint.classList.remove('hidden');
+                }
+                showSuccessMessage('Nutrition filled from AI — review and log when ready.');
+            } catch (e) {
+                showErrorMessage('Connection error. Try again.');
+            } finally {
+                if (btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
+            }
+        }
+
+        let mealsDayCache = [];
+
+        function updateMealSubmitUi() {
+            const id = (document.getElementById('meal-edit-id') || {}).value;
+            const btn = document.getElementById('meal-submit-btn');
+            const cancel = document.getElementById('meal-cancel-edit-btn');
+            if (!btn) return;
+            if (id) {
+                btn.innerHTML = '<i class="fas fa-save mr-2"></i>Save changes';
+                if (cancel) cancel.classList.remove('hidden');
+            } else {
+                btn.innerHTML = '<i class="fas fa-plus mr-2"></i>Log Meal';
+                if (cancel) cancel.classList.add('hidden');
+            }
+        }
+
+        function startMealEditFromList(id) {
+            const m = mealsDayCache.find(x => x.id === id);
+            if (!m) return;
+            document.getElementById('meal-edit-id').value = String(id);
+            document.getElementById('meal-date').value = m.date;
+            document.getElementById('meal-name').value = m.mealName || '';
+            document.getElementById('meal-calories').value = m.calories;
+            document.getElementById('meal-protein').value = m.protein;
+            document.getElementById('meal-carbs').value = m.carbs;
+            document.getElementById('meal-fats').value = m.fats;
+            const tEl = document.getElementById('meal-time');
+            if (tEl) tEl.value = m.mealTime ? normalizeTimeForInput(m.mealTime) : '';
+            const hint = document.getElementById('meal-slot-hint');
+            if (hint) { hint.classList.add('hidden'); hint.textContent = ''; }
+            updateMealSubmitUi();
+            const formEl = document.getElementById('meal-form');
+            if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function cancelMealEdit() {
+            document.getElementById('meal-edit-id').value = '';
+            const form = document.getElementById('meal-form');
+            const d = document.getElementById('meal-date').value;
+            if (form) form.reset();
+            const dateEl = document.getElementById('meal-date');
+            if (dateEl) dateEl.value = d;
+            const hint = document.getElementById('meal-slot-hint');
+            if (hint) { hint.classList.add('hidden'); hint.textContent = ''; }
+            updateMealSubmitUi();
+        }
+
+        async function deleteMealFromList(id) {
+            if (!confirm('Delete this meal?')) return;
+            try {
+                const res = await authFetch('/api/meals/' + encodeURIComponent(id), { method: 'DELETE' });
+                if (res.status === 204) {
+                    showSuccessMessage('Meal deleted.');
+                    loadDashboard();
+                    loadMealsForSelectedDay();
+                    const hid = document.getElementById('meal-edit-id');
+                    if (hid && String(hid.value) === String(id)) cancelMealEdit();
+                    return;
+                }
+                if (res.status === 404) {
+                    showErrorMessage('Meal not found.');
+                    loadMealsForSelectedDay();
+                    return;
+                }
+                showErrorMessage('Could not delete meal.');
+            } catch (e) {
+                showErrorMessage('Connection error.');
+            }
+        }
+
+        async function loadMealsForSelectedDay() {
+            const box = document.getElementById('meals-day-list');
+            const dateInp = document.getElementById('meal-date');
+            if (!box || !dateInp) return;
+            const d = dateInp.value;
+            if (!d) {
+                mealsDayCache = [];
+                box.innerHTML = '<p class="text-[#71767c]">Pick a date to see meals.</p>';
+                return;
+            }
+            box.innerHTML = '<p class="text-[#71767c]"><i class="fas fa-spinner fa-spin mr-2"></i>Loading…</p>';
+            try {
+                const res = await authFetch('/api/meals/list?date=' + encodeURIComponent(d));
+                if (!res.ok) {
+                    box.innerHTML = '<p class="text-amber-400/90">Could not load meals.</p>';
+                    return;
+                }
+                const meals = await res.json();
+                mealsDayCache = meals;
+                if (!meals.length) {
+                    box.innerHTML = '<p class="text-[#71767c]">No meals logged for this date.</p>';
+                    return;
+                }
+                let tc = 0, tp = 0, tcb = 0, tf = 0;
+                meals.forEach(m => {
+                    tc += m.calories || 0;
+                    tp += Number(m.protein) || 0;
+                    tcb += Number(m.carbs) || 0;
+                    tf += Number(m.fats) || 0;
+                });
+                const rows = meals.map(m => {
+                    const timeLabel = m.mealTime ? `<span class="text-[#3adffa] font-mono text-xs">${escapeHtml(m.mealTime)}</span>` : '<span class="text-[#71767c] text-xs">—</span>';
+                    return `<li class="flex flex-wrap items-center justify-between gap-2 py-3">
+                        <div class="min-w-0 flex-1">
+                            <div class="font-medium text-[#e7ebf3] truncate">${escapeHtml(m.mealName || '')}</div>
+                            <div class="text-xs text-[#71767c] mt-0.5">${m.calories} kcal · P ${m.protein} · C ${m.carbs} · F ${m.fats}</div>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            ${timeLabel}
+                            <button type="button" onclick="startMealEditFromList(${m.id})" title="Edit"
+                                class="p-2 rounded-lg text-[#a7abb2] hover:text-[#3adffa] hover:bg-[#1a2027] transition" aria-label="Edit meal"><i class="fas fa-pen text-xs"></i></button>
+                            <button type="button" onclick="deleteMealFromList(${m.id})" title="Delete"
+                                class="p-2 rounded-lg text-[#a7abb2] hover:text-red-400 hover:bg-[#1a2027] transition" aria-label="Delete meal"><i class="fas fa-trash-alt text-xs"></i></button>
+                        </div>
+                    </li>`;
+                }).join('');
+                box.innerHTML = `<div id="meals-day-totals" class="rounded-xl bg-[#141a20] border border-[#43484e]/30 px-4 py-3 mb-3 text-[#a7abb2] text-xs">
+                    Day totals: <strong class="text-[#e7ebf3]">${tc}</strong> kcal · P <strong class="text-[#e7ebf3]">${tp.toFixed(1)}</strong>g · C <strong class="text-[#e7ebf3]">${tcb.toFixed(1)}</strong>g · F <strong class="text-[#e7ebf3]">${tf.toFixed(1)}</strong>g
+                </div><ul class="divide-y divide-[#43484e]/20">${rows}</ul>`;
+                loadHabitMotion().then(function (M) {
+                    if (!M || !M.animate) return;
+                    var totalsEl = document.getElementById('meals-day-totals');
+                    if (totalsEl) {
+                        try {
+                            M.animate(totalsEl, { opacity: [0, 1], y: [6, 0] }, { duration: 0.32, easing: [0.22, 1, 0.36, 1] });
+                        } catch (e1) { /* no-op */ }
+                    }
+                    var items = box.querySelectorAll('ul li');
+                    if (!items.length) return;
+                    try {
+                        var opts = { duration: 0.3, easing: [0.22, 1, 0.36, 1] };
+                        if (M.stagger) opts.delay = M.stagger(0.04, { startDelay: 0.08 });
+                        M.animate(items, { opacity: [0, 1], y: [8, 0] }, opts);
+                    } catch (e2) {
+                        for (var j = 0; j < items.length; j++) {
+                            M.animate(items[j], { opacity: [0, 1], y: [8, 0] }, { duration: 0.28, delay: j * 0.04 });
+                        }
+                    }
+                });
+            } catch (e) {
+                box.innerHTML = '<p class="text-amber-400/90">Could not load meals.</p>';
+            }
+        }
+
         async function submitMeal() {
             const form = document.getElementById('meal-form');
             if (!form.checkValidity()) {
@@ -797,199 +1793,316 @@
             }
 
             const formData = new FormData(form);
+            const mealTimeRaw = (formData.get('mealTime') || '').toString().trim();
             const mealData = {
-                userId: parseInt(formData.get('userId')),
                 date: formData.get('date'),
                 mealName: formData.get('mealName'),
-                calories: parseInt(formData.get('calories')),
+                calories: parseInt(formData.get('calories'), 10),
                 protein: parseFloat(formData.get('protein')),
                 carbs: parseFloat(formData.get('carbs')),
-                fats: parseFloat(formData.get('fats'))
+                fats: parseFloat(formData.get('fats')),
+                mealTime: mealTimeRaw
             };
 
+            const editId = (document.getElementById('meal-edit-id').value || '').trim();
+            const url = editId ? '/api/meals/' + encodeURIComponent(editId) : '/api/meals/log';
+            const method = editId ? 'PUT' : 'POST';
+
             try {
-                const response = await fetch('/api/meals/log', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                const response = await authFetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(mealData)
                 });
 
                 if (response.ok) {
-                    const meal = await response.json();
-                    addActivityToList('meal', meal);
+                    const dateKeep = document.getElementById('meal-date').value;
                     form.reset();
-                    document.getElementById('meal-date').valueAsDate = new Date();
-                    showSuccessMessage('Meal logged successfully!');
+                    if (editId) {
+                        document.getElementById('meal-date').value = dateKeep;
+                    } else {
+                        document.getElementById('meal-date').valueAsDate = new Date();
+                    }
+                    document.getElementById('meal-edit-id').value = '';
+                    updateMealSubmitUi();
+                    const hint = document.getElementById('meal-slot-hint');
+                    if (hint) { hint.classList.add('hidden'); hint.textContent = ''; }
+                    loadDashboard();
+                    loadMealsForSelectedDay();
+                    showSuccessMessage(editId ? 'Meal updated.' : 'Meal logged successfully!');
                 } else {
-                    const errorData = await response.json();
-                    showErrorMessage('Error logging meal: ' + JSON.stringify(errorData));
+                    const errorData = await response.json().catch(() => ({}));
+                    showErrorMessage('Error saving meal: ' + JSON.stringify(errorData));
                 }
             } catch (error) {
                 showErrorMessage('Connection error. Please try again.');
             }
         }
 
-        // Add activity to the list with animations
-        function addActivityToList(type, data) {
-            const activitiesList = document.getElementById('activities-list');
-            
-            // Remove the "no activities" message if it exists
-            if (activitiesList.querySelector('.text-center')) {
-                activitiesList.innerHTML = '';
-            }
-
-            const activityElement = document.createElement('div');
-            activityElement.className = 'flex items-center justify-between p-6 bg-gradient-to-r from-white to-gray-50 rounded-2xl mb-4 shadow-lg border border-gray-200 bounce-in card-hover';
-            
-            if (type === 'workout') {
-                activityElement.innerHTML = `
-                    <div class="flex items-center">
-                        <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mr-4 shadow-lg">
-                            <i class="fas fa-dumbbell text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <div class="font-bold text-gray-900 text-lg">${data.exerciseName}</div>
-                            <div class="text-sm text-gray-600">${data.date} • ${data.sets} sets × ${data.reps} reps</div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-2xl font-bold text-blue-600">${data.weight} lbs</div>
-                        <div class="text-xs text-gray-500 font-semibold">Workout</div>
-                    </div>
-                `;
-            } else if (type === 'meal') {
-                activityElement.innerHTML = `
-                    <div class="flex items-center">
-                        <div class="p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mr-4 shadow-lg">
-                            <i class="fas fa-utensils text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <div class="font-bold text-gray-900 text-lg">${data.mealName}</div>
-                            <div class="text-sm text-gray-600">${data.date} • ${data.calories} calories</div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm text-gray-600 font-semibold">P: ${data.protein}g | C: ${data.carbs}g | F: ${data.fats}g</div>
-                        <div class="text-xs text-gray-500 font-semibold">Meal</div>
-                    </div>
-                `;
-            }
-
-            activitiesList.insertBefore(activityElement, activitiesList.firstChild);
-        }
-
-        // Show success message with animations
         function showSuccessMessage(message) {
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-6 right-6 bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 bounce-in border border-green-400';
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle mr-3 text-xl"></i>
-                    <span class="font-semibold">${message}</span>
-                </div>
-            `;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateX(100%)';
-                notification.style.opacity = '0';
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 3000);
+            void habitShowToast(message, 'success');
         }
 
-        // Show error message with animations
         function showErrorMessage(message) {
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-6 right-6 bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 bounce-in border border-red-400';
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-circle mr-3 text-xl"></i>
-                    <span class="font-semibold">${message}</span>
-                </div>
-            `;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateX(100%)';
-                notification.style.opacity = '0';
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 5000);
+            void habitShowToast(message, 'error');
         }
 
-        // Security: Clear data on page unload
-        window.addEventListener('beforeunload', function() {
-            clearAllData();
-        });
-        
-        // Security: Clear data on page visibility change (tab switch)
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                // Optional: Clear sensitive data when tab becomes hidden
-                // clearAllData();
+        async function habitShowToast(message, kind) {
+            var text = typeof message === 'string' ? message : String(message);
+            var notification = document.createElement('div');
+            var isErr = kind === 'error';
+            notification.className = 'fixed top-6 right-6 z-[300] max-w-[min(100vw-2rem,28rem)] px-6 py-4 rounded-2xl shadow-2xl border ' +
+                (isErr
+                    ? 'bg-gradient-to-r from-red-500 to-red-600 text-white border-red-400'
+                    : 'bg-gradient-to-r from-green-500 to-green-600 text-white border-green-400');
+            notification.innerHTML =
+                '<div class="flex items-center gap-3">' +
+                '<i class="fas ' + (isErr ? 'fa-exclamation-circle' : 'fa-check-circle') + ' text-xl shrink-0"></i>' +
+                '<span class="font-semibold text-sm"></span></div>';
+            notification.querySelector('span').textContent = text;
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(56px)';
+            document.body.appendChild(notification);
+            var M = await loadHabitMotion();
+            if (M && M.animate) {
+                try {
+                    var enter = M.animate(notification, { opacity: [0, 1], x: [56, 0] }, { duration: 0.4, easing: [0.22, 1, 0.36, 1] });
+                    if (enter && enter.finished) await enter.finished;
+                } catch (e) {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'none';
+                }
+            } else {
+                notification.classList.add('bounce-in');
+                notification.style.opacity = '';
+                notification.style.transform = '';
             }
-        });
-        
-        // Security: Clear data after 30 minutes of inactivity
+            var ttl = isErr ? 5000 : 3000;
+            setTimeout(async function () {
+                if (M && M.animate) {
+                    try {
+                        var out = M.animate(notification, { opacity: [1, 0], x: [0, 48] }, { duration: 0.28, easing: [0.4, 0, 1, 1] });
+                        if (out && out.finished) await out.finished;
+                    } catch (e2) {
+                        notification.style.opacity = '0';
+                    }
+                } else {
+                    notification.style.transform = 'translateX(100%)';
+                    notification.style.opacity = '0';
+                }
+                notification.remove();
+            }, ttl);
+        }
+
         let inactivityTimer;
         function resetInactivityTimer() {
             clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(() => {
-                clearAllData();
-                showSuccessMessage('Session cleared due to inactivity');
-            }, 30 * 60 * 1000); // 30 minutes
+            inactivityTimer = setTimeout(function () {
+                if (localStorage.getItem(TOKEN_KEY)) {
+                    logout();
+                    showSuccessMessage('Signed out after inactivity');
+                }
+            }, 30 * 60 * 1000);
         }
-        
-        // Track user activity
+
         ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(function(name) {
             document.addEventListener(name, resetInactivityTimer, true);
         });
         
-        // Clear data function
         async function clearAllData() {
             try {
-                await fetch('/api/ai/clear-data', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                // Clear local storage
-                localStorage.clear();
-                sessionStorage.clear();
-                
-                // Clear form data
-                document.querySelectorAll('form').forEach(form => form.reset());
-                
-                // Clear activities list
-                const activitiesList = document.getElementById('activities-list');
-                activitiesList.innerHTML = `
-                    <div class="text-center py-12">
-                        <div class="p-6 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl inline-block mb-4">
-                            <i class="fas fa-clipboard-list text-4xl text-gray-400"></i>
-                        </div>
-                        <p class="text-gray-500 text-lg">No activities logged yet. Start by logging a workout or meal above!</p>
-                    </div>
-                `;
-                
-                // Reset AI status
-                updateAIStatus(false);
-                
+                await authFetch('/api/ai/clear-data', { method: 'POST', body: '{}' });
             } catch (error) {
                 console.error('Error clearing data:', error);
             }
+            localStorage.clear();
+            sessionStorage.clear();
+            document.querySelectorAll('form').forEach(function (form) { form.reset(); });
+            document.getElementById('app-shell').classList.add('hidden');
+            document.getElementById('auth-view').classList.remove('hidden');
+            updateAIStatus(false);
         }
-        
-        // Initialize the page
+
+        let exerciseTimeout, mealTimeout;
+        let selectedExerciseIndex = -1, selectedMealIndex = -1;
+
+        function setupAutocomplete() {
+            const exerciseInput = document.getElementById('exercise-name');
+            const mealInput = document.getElementById('meal-name');
+
+            if (exerciseInput) {
+                exerciseInput.addEventListener('input', function() {
+                    clearTimeout(exerciseTimeout);
+                    const query = this.value.trim();
+                    
+                    if (query.length >= 2) {
+                        exerciseTimeout = setTimeout(() => {
+                            getAISuggestions('exercise', query, this);
+                        }, 300);
+                    } else {
+                        hideSuggestions('exercise');
+                    }
+
+                    this.style.borderColor = '#3b82f6';
+                });
+                
+                exerciseInput.addEventListener('keydown', function(e) {
+                    handleKeyNavigation(e, 'exercise');
+                });
+                
+                exerciseInput.addEventListener('focus', function() {
+                    this.style.borderColor = '#3b82f6';
+                    this.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                    if (this.value.trim().length >= 2) {
+                        getAISuggestions('exercise', this.value.trim(), this);
+                    }
+                });
+                
+                exerciseInput.addEventListener('blur', function() {
+                    this.style.borderColor = '#d1d5db';
+                    this.style.boxShadow = 'none';
+                    setTimeout(() => hideSuggestions('exercise'), 200);
+                });
+            }
+
+            if (mealInput) {
+                mealInput.addEventListener('input', function() {
+                    clearTimeout(mealTimeout);
+                    const query = this.value.trim();
+                    
+                    if (query.length >= 2) {
+                        mealTimeout = setTimeout(() => {
+                            getAISuggestions('meal', query, this);
+                        }, 300);
+                    } else {
+                        hideSuggestions('meal');
+                    }
+
+                    this.style.borderColor = '#10b981';
+                });
+                
+                mealInput.addEventListener('keydown', function(e) {
+                    handleKeyNavigation(e, 'meal');
+                });
+                
+                mealInput.addEventListener('focus', function() {
+                    this.style.borderColor = '#10b981';
+                    this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
+                    if (this.value.trim().length >= 2) {
+                        getAISuggestions('meal', this.value.trim(), this);
+                    }
+                });
+                
+                mealInput.addEventListener('blur', function() {
+                    this.style.borderColor = '#d1d5db';
+                    this.style.boxShadow = 'none';
+                    setTimeout(() => hideSuggestions('meal'), 200);
+                });
+            }
+        }
+
+        async function getAISuggestions(type, query, inputElement) {
+            try {
+                const endpoint = type === 'exercise' ? '/api/ai/autocomplete/exercises' : '/api/ai/autocomplete/meals';
+                const response = await authFetch(`${endpoint}?query=${encodeURIComponent(query)}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showSuggestions(type, data.suggestions, inputElement);
+                } else {
+                    console.error('Failed to get suggestions:', response.statusText);
+                    hideSuggestions(type);
+                }
+            } catch (error) {
+                console.error('Error getting AI suggestions:', error);
+                hideSuggestions(type);
+            }
+        }
+
+        function showSuggestions(type, suggestions, inputElement) {
+            const suggestionsDiv = document.getElementById(`${type}-suggestions`);
+            if (!suggestionsDiv || suggestions.length === 0) {
+                hideSuggestions(type);
+                return;
+            }
+
+            suggestionsDiv.innerHTML = '';
+            suggestions.forEach((suggestion, index) => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = 'px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors duration-150';
+                suggestionItem.textContent = suggestion;
+                suggestionItem.dataset.index = index;
+                
+                suggestionItem.addEventListener('click', function() {
+                    inputElement.value = suggestion;
+                    hideSuggestions(type);
+                    inputElement.focus();
+                });
+                
+                suggestionsDiv.appendChild(suggestionItem);
+            });
+            
+            suggestionsDiv.classList.remove('hidden');
+            selectedExerciseIndex = -1;
+            selectedMealIndex = -1;
+        }
+
+        function hideSuggestions(type) {
+            const suggestionsDiv = document.getElementById(`${type}-suggestions`);
+            if (suggestionsDiv) {
+                suggestionsDiv.classList.add('hidden');
+            }
+        }
+
+        function handleKeyNavigation(e, type) {
+            const suggestionsDiv = document.getElementById(`${type}-suggestions`);
+            if (!suggestionsDiv || suggestionsDiv.classList.contains('hidden')) return;
+
+            const suggestions = suggestionsDiv.querySelectorAll('div[data-index]');
+            let selectedIndex = type === 'exercise' ? selectedExerciseIndex : selectedMealIndex;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex = Math.max(selectedIndex - 1, -1);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+                    suggestions[selectedIndex].click();
+                }
+                return;
+            } else if (e.key === 'Escape') {
+                hideSuggestions(type);
+                return;
+            }
+
+            if (type === 'exercise') {
+                selectedExerciseIndex = selectedIndex;
+            } else {
+                selectedMealIndex = selectedIndex;
+            }
+
+            suggestions.forEach((item, index) => {
+                if (index === selectedIndex) {
+                    item.classList.add('bg-blue-100', 'font-semibold');
+                } else {
+                    item.classList.remove('bg-blue-100', 'font-semibold');
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            showTab('exercise');
+            if (localStorage.getItem(TOKEN_KEY)) showApp();
             resetInactivityTimer();
+            setupAutocomplete();
+            wireLabChannelButtons();
+            var mls = document.getElementById('motion-lab-search');
+            if (mls) {
+                mls.addEventListener('input', onMotionLabSearchInput);
+                mls.addEventListener('search', onMotionLabSearchInput);
+            }
         });
     </script>
 </body>

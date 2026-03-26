@@ -1,202 +1,152 @@
-# Habitual AI - Fitness Tracking Application
+# Habitual AI — Fitness Tracking Application
 
-A comprehensive fitness tracking web application that combines workout logging, meal tracking, and intelligent AI-powered insights to help users achieve their fitness goals. Built with modern web technologies and powered by OpenAI's GPT models for personalized fitness coaching.
+Workout logging + meal logging (including `mealTime`) + AI-driven nutrition and insights.
 
-## Overview
+The frontend is served from the backend as a static page: `GET /fitness-tracker.html`.
 
-This application provides a streamlined approach to fitness tracking by combining traditional logging methods with modern AI technology. Users can track their workouts and meals through an intuitive interface, while receiving personalized recommendations and insights powered by OpenAI's GPT models.
+## Features
 
-## Core Features
+### Workouts
+- Create workout logs: date, exercise name, sets, reps, weight.
+- Endpoint: `POST /api/workouts/log`
 
-### Exercise Tracking
-- Log workouts with detailed information including exercise name, sets, reps, and weight
-- Track progress over time with historical data
-- User-specific workout history for personalized insights
+### Diet (Meals)
+- Create, list, update, and delete meal logs.
+- `mealTime` is optional:
+  - create: empty uses server current time
+  - update: empty keeps the stored `mealTime`
+- Endpoints:
+  - `POST /api/meals/log`
+  - `GET  /api/meals/list?date=YYYY-MM-DD` (defaults to today)
+  - `PUT  /api/meals/{id}`
+  - `DELETE /api/meals/{id}`
 
-### Diet Tracking
-- Comprehensive meal logging with nutritional information
-- Track calories, protein, carbohydrates, and fats
-- Maintain dietary history for analysis and recommendations
+### AI
+- Configure OpenAI API key in the Settings tab (`POST /api/ai/configure`).
+- AI endpoints (JWT required):
+  - `GET /api/ai/status`
+  - `POST /api/ai/meal-estimate` (estimates calories/macros + meal time + meal slot from meal name)
+  - `GET /api/ai/workout-recommendations`
+  - `GET /api/ai/nutrition-advice`
+  - `GET /api/ai/progress-analysis`
+  - `GET /api/ai/autocomplete/exercises?query=...`
+  - `GET /api/ai/autocomplete/meals?query=...`
+  - `POST /api/ai/clear-data`
 
-### AI-Powered Insights
-The application leverages OpenAI's GPT-3.5 Turbo to provide intelligent fitness coaching:
+### Motion Lab (Tutorials)
+- YouTube ingest + optional embeddings (only when AI is configured).
+- Endpoints:
+  - `POST /api/lab/sync`
+  - `GET  /api/lab/search?q=...&channelId=...&limit=48`
+  - `GET  /api/lab/channels`
+  - `GET  /api/lab/status`
 
-**Workout Recommendations**
-- Exercise suggestions based on workout history and fitness level
-- Progressive overload recommendations for continued improvement
-- Alternative exercise suggestions to prevent plateaus
-- Recovery and rest day optimization
+### Dashboard
+- `GET /api/dashboard/summary`
 
-**Nutrition Coaching**
-- Personalized meal planning based on workout intensity and goals
-- Macro optimization recommendations
-- Calorie adjustment suggestions
-- Healthy recipe recommendations
-
-**Progress Analysis**
-- Performance trend analysis and plateau detection
-- Form improvement suggestions
-- Goal achievement timeline estimates
-- Personalized progress recommendations
-
-### Modern User Interface
-The application features a cutting-edge UI/UX design with:
-
-**Visual Design**
-- **Gradient Backgrounds** - Beautiful purple-to-blue gradients throughout the interface
-- **Glass Morphism** - Translucent cards with backdrop blur effects
-- **Modern Typography** - Inter font family for clean, professional text
-- **Color-Coded Sections** - Each feature area has its own distinct color theme
-
-**Interactive Elements**
-- **Smooth Animations** - Fade-in, slide-in, and bounce effects for enhanced user experience
-- **Hover Effects** - Cards lift and scale on hover for interactive feedback
-- **Floating Elements** - Animated logo with pulsing ring effects
-- **Staggered Animations** - AI cards appear with delayed timing for polished feel
-
-**User Experience**
-- **Tab-Based Navigation** - Clean, intuitive navigation between features
-- **Real-time Notifications** - Animated success/error messages with smooth transitions
-- **Responsive Layout** - Optimized for desktop, tablet, and mobile devices
-- **Accessibility** - High contrast ratios and keyboard navigation support
-
-## Technology Stack
-
-### Backend
-- **Java 17** - Modern Java features and performance
-- **Spring Boot 3.2.0** - Rapid application development framework
-- **Spring Data JPA** - Data persistence and database operations
-- **Hibernate** - Object-relational mapping
-- **Maven** - Dependency management and build automation
-
-### Database
-- **H2 In-Memory Database** - Lightweight database for development and testing
-- **JPA/Hibernate** - Database abstraction and ORM capabilities
-
-### Frontend
-- **Vanilla JavaScript** - Modern ES6+ features without framework overhead
-- **Tailwind CSS** - Utility-first CSS framework for rapid UI development
-- **HTML5** - Semantic markup and modern web standards
-- **Font Awesome** - Icon library for enhanced user experience
-- **Modern UI/UX** - Glass morphism design with gradient backgrounds
-- **Smooth Animations** - CSS animations and transitions for enhanced user experience
-- **Responsive Design** - Mobile-first approach with adaptive layouts
-
-### AI Integration
-- **OpenAI GPT-3.5 Turbo** - Large language model for intelligent insights
-- **OpenAI Java Client** - Official Java SDK for API integration
-- **Jackson** - JSON processing and serialization
-
-## System Requirements
-
-- Java 17 or higher
-- Maven 3.6 or higher
-- OpenAI API key (for AI features)
-- Modern web browser with JavaScript enabled
-
-## Installation and Setup
+## Quick Start
 
 ### Prerequisites
+- Java 17+
+- Maven
+- Docker (optional, for Postgres)
 
-1. **Java Development Kit**
-   - Install Java 17 or higher
-   - Verify installation: `java -version`
-
-2. **Maven**
-   - Install Maven 3.6 or higher
-   - Verify installation: `mvn -version`
-
-3. **OpenAI API Access**
-   - Create account at [OpenAI Platform](https://platform.openai.com)
-   - Generate API key from account settings
-   - Note: API key starts with `sk-`
-
-### Build and Run
-
-1. **Clone Repository**
+### Run with Postgres (default)
+1. Start the database:
    ```bash
-   git clone <repository-url>
-   cd gym-tracker
+   docker compose up -d
    ```
-
-2. **Build Project**
-   ```bash
-   mvn clean install
-   ```
-
-3. **Run Application**
+2. Start the app:
    ```bash
    mvn spring-boot:run
    ```
+3. Open:
+   - `http://localhost:8080/fitness-tracker.html`
 
-4. **Access Application**
-   - Open browser and navigate to `http://localhost:8080`
-   - Default port can be modified in `application.properties`
+Postgres credentials are defined in `docker-compose.yml`.
 
-### AI Configuration
+### Run with H2 (no Docker)
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=h2
+```
 
-1. Navigate to the Settings tab in the application
-2. Enter your OpenAI API key in the designated field
-3. Click "Configure AI" to enable intelligent features
-4. Verify AI status shows "Configured" before using features
+Then open:
+- `http://localhost:8080/fitness-tracker.html`
+- H2 console: `http://localhost:8080/h2-console`
+
+## Configuration
+
+### JWT
+- The app uses JWT for auth.
+- `app.jwt.secret` is configured in `src/main/resources/application.properties`.
+
+### OpenAI
+- Configure your OpenAI key from the Settings tab.
+- The key is validated by the server and kept in memory until restart.
+
+### YouTube Data API (Motion Lab)
+- Configure `lab.youtube.api-key` via env var `YOUTUBE_API_KEY` or `application-local.properties` (gitignored).
 
 ## API Reference
 
-### Workout Management
+### Auth (no JWT)
+- `POST /api/auth/register`
+- `POST /api/auth/login`
 
-**POST** `/api/workouts/log`
-Log a new workout session.
+### Dashboard (JWT required)
+- `GET /api/dashboard/summary`
 
-Request Body:
-```json
-{
-  "userId": 1,
-  "date": "2025-01-24",
-  "exerciseName": "Bench Press",
-  "sets": 3,
-  "reps": 10,
-  "weight": 135.0
-}
-```
+### Workouts (JWT required)
+- `POST /api/workouts/log`
+- Request body:
+  ```json
+  {
+    "date": "2026-03-26",
+    "exerciseName": "Bench Press",
+    "sets": 3,
+    "reps": 10,
+    "weight": 135.0
+  }
+  ```
 
-Response: HTTP 201 with workout details
+### Meals / Diet (JWT required)
+- `POST /api/meals/log`
+- `GET /api/meals/list?date=YYYY-MM-DD` (defaults to today)
+- `PUT /api/meals/{id}`
+- `DELETE /api/meals/{id}`
 
-### Meal Management
+- Request body:
+  ```json
+  {
+    "date": "2026-03-26",
+    "mealName": "Greek yogurt with berries",
+    "calories": 420,
+    "protein": 25.0,
+    "carbs": 35.0,
+    "fats": 12.5,
+    "mealTime": "08:15"
+  }
+  ```
 
-**POST** `/api/meals/log`
-Log a new meal with nutritional information.
+`mealTime` is optional; it must be `HH:mm` when provided (empty string allowed).
+For `PUT`, an empty `mealTime` keeps the stored time.
 
-Request Body:
-```json
-{
-  "userId": 1,
-  "date": "2025-01-24",
-  "mealName": "Breakfast",
-  "calories": 500,
-  "protein": 25.0,
-  "carbs": 50.0,
-  "fats": 15.0
-}
-```
+### AI (JWT required)
+- `POST /api/ai/configure`
+- `GET /api/ai/status`
+- `POST /api/ai/meal-estimate` (fills calories/macros + mealTime + mealSlot from meal name)
+- `GET /api/ai/workout-recommendations`
+- `GET /api/ai/nutrition-advice`
+- `GET /api/ai/progress-analysis`
+- `GET /api/ai/autocomplete/exercises?query=...`
+- `GET /api/ai/autocomplete/meals?query=...`
+- `POST /api/ai/clear-data`
 
-Response: HTTP 201 with meal details
-
-### AI Services
-
-**POST** `/api/ai/configure`
-Configure OpenAI API key for AI features.
-
-**GET** `/api/ai/status`
-Check current AI configuration status.
-
-**GET** `/api/ai/workout-recommendations/{userId}`
-Get AI-generated workout recommendations.
-
-**GET** `/api/ai/nutrition-advice/{userId}`
-Get AI-generated nutrition advice.
-
-**GET** `/api/ai/progress-analysis/{userId}`
-Get AI-generated progress analysis.
+### Motion Lab (JWT required)
+- `POST /api/lab/sync`
+- `GET /api/lab/search?q=...&channelId=...&limit=48`
+- `GET /api/lab/channels`
+- `GET /api/lab/status`
 
 ## Database Schema
 
@@ -220,6 +170,7 @@ The application automatically generates the following tables:
 - `protein` (NUMERIC(5,1), Not Null)
 - `carbs` (NUMERIC(5,1), Not Null)
 - `fats` (NUMERIC(5,1), Not Null)
+- `meal_time` (TIME, nullable)
 
 ## Application Architecture
 
@@ -263,7 +214,7 @@ Key configuration options in `application.properties`:
 - `server.port` - HTTP server port (default: 8080)
 - `spring.datasource.url` - Database connection string
 - `spring.jpa.hibernate.ddl-auto` - Database schema generation
-- `spring.h2.console.enabled` - H2 console access
+- H2 console access (`/h2-console`) when running with profile `h2`
 - `logging.level.com.gymtracker` - Application logging level
 
 ### AI Configuration
@@ -295,7 +246,7 @@ Key configuration options in `application.properties`:
 ## Deployment
 
 ### Development Environment
-- H2 in-memory database
+- Postgres via Docker Compose (default) or H2 via `-Dspring-boot.run.profiles=h2`
 - Spring Boot embedded Tomcat
 - Hot reload for development
 
@@ -317,8 +268,8 @@ Key configuration options in `application.properties`:
 - Review application logs for errors
 
 **Database Connection Issues**
-- Verify H2 console access at `/h2-console`
-- Check database configuration in properties
+- If using Postgres: ensure Docker Compose is running and reachable at `localhost:5432`
+- If using H2: start with profile `h2` and verify `/h2-console`
 - Review JPA/Hibernate logs
 
 **Frontend Issues**
@@ -341,8 +292,7 @@ Application logs provide detailed information about:
 4. Submit a pull request with detailed description
 
 ## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+No `LICENSE` file is included in this repo. Add one if you intend to publish publicly.
 
 ## Support
 
